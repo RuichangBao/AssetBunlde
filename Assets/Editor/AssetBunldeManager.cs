@@ -93,7 +93,7 @@ public class AssetBunldeManager//:Editor
         AssetBundleBuild abBuild = new AssetBundleBuild();
         abBuild.assetBundleName = "123456"; // 就是我们要的目标AssetLabel
         abBuild.assetBundleName = "78945"; // 就是我们要的目标AssetLabel
-        Debug.Log("第二次修改");
+        Debug.Log("第四次修改");
         //dfsadfa
     }
 }
