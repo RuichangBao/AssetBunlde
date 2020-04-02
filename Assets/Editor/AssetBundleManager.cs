@@ -90,14 +90,11 @@ public class AssetBundleManager
     [MenuItem("BRC/生成AssetBunlde名字")]
     public static void CreateAssetBundle()
     {
-        AssetBundleBuild abBuild = new AssetBundleBuild();
-        abBuild.assetBundleName = "123456"; // 就是我们要的目标AssetLabel
-        abBuild.assetBundleName = "78945"; // 就是我们要的目标AssetLabel
-        string url = Application.streamingAssetsPath + @"Notice";
-        AssetImporter importer = AssetImporter.GetAtPath(url);
-        Debug.LogError(importer == null);
-        importer.assetBundleName = "132456";
-        Debug.Log("第五次修改");
+        //太坑了 AssetImporter是基于Assets的上层目录的 这样写不正确
+        //string url = Application.streamingAssetsPath + @"/Notice/11";
+        AssetImporter importer = AssetImporter.GetAtPath("Assets/Res");
+        importer.assetBundleName = "测试生成AssetBunlde名字/1245/dfgfd";
+        importer.assetBundleVariant = "测试生成AssetBundle变量";
         AssetDatabase.Refresh(); //刷新编辑器 
     }
 
@@ -118,13 +115,16 @@ public class AssetBundleManager
     [MenuItem("BRC/测试程序")]
     public static void Test44()
     {
+        //选中的文件夹或者文件
         Object[] selects = Selection.objects;
         foreach (Object selected in selects)
         {
             string path = AssetDatabase.GetAssetPath(selected);
+            Debug.LogError("path:"+ path);
             AssetImporter assetImporter = AssetImporter.GetAtPath(path);
             assetImporter.assetBundleName = selected.name;
-            assetImporter.assetBundleVariant = "uni";
+            Debug.LogError("selected.name:"+ selected.name);
+            assetImporter.assetBundleVariant = "unity";
             //assetImporter.SaveAndReimport();   
         }
         AssetDatabase.Refresh();
