@@ -35,7 +35,7 @@ public class AssetBundleManager
         DirectoryInfo[] directoryInfos = directory.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
         {
-            return ;
+            return;
         }
         foreach (DirectoryInfo directoryInfo in directoryInfos)
         {
@@ -93,7 +93,7 @@ public class AssetBundleManager
     /// </summary>
     private static void ReadFile(string url)
     {
-        string abUrl = streamingAssetsPath + @"/"+ GetPlatformFolder()+@"/" + url; //该目录下ab包的输出路径
+        string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url; //该目录下ab包的输出路径
         string resUrl = dataPath + @"/Res/" + url;
 
         DirectoryInfo directoryInfo = new DirectoryInfo(resUrl);
@@ -104,31 +104,26 @@ public class AssetBundleManager
             Debug.LogError("该文件夹下为空");
             return;
         }
-        CreateNoAreFolder((abUrl).ToLower());//创建AB包文件夹
+        FileIO.CreateNoAreFolder((abUrl).ToLower());//创建AB包文件夹
         foreach (DirectoryInfo directory in directoryInfos)
         { //directory.Name ab包的名字 
             string abResUrl = resUrl + @"/" + directory.Name;
             DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
-            FileInfo[] fileInfos= abDirectory.GetFiles();
+            FileInfo[] fileInfos = abDirectory.GetFiles();
+
+            foreach (FileInfo fileInfo in fileInfos)
+            {
+                Debug.LogError("resUrl:" + resUrl);
+                Debug.LogError(resUrl + @"/" + fileInfo.Name);
+                Debug.LogError(@"Assets/Res/" + url + @"/" + fileInfo.Name);
+                AssetImporter importer = AssetImporter.GetAtPath(@"Assets/Res/" + url);
+                importer.assetBundleName = directory.Name;
+                importer.assetBundleVariant = directory.Name;
+            }
+
+            BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
         }
 
-        //Debug.Log("读取文件:url：" + url);
-        //directoryFile = new DirectoryInfo(streamingAssetsPath + @"/" + url);
-        //if (string.IsNullOrEmpty(streamingAssetsPath + @"/" + url))
-        //    return;
-        //FileInfo[] fileInfos = directoryFile.GetFiles();
-        //if (fileInfos == null || fileInfos.Length <= 0)
-        //    return;
-        //foreach (FileInfo fileInfo in fileInfos)
-        //{
-        //    if (!fileInfo.Name.EndsWith(".meta"))
-        //    {
-        //        Debug.Log("读取文件:url:" + url + "    fileInfo.Name:" + fileInfo.Name);
-        //        //BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-
-            //        //BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
-            //    }
-            //}
     }
 
     /// <summary>
@@ -150,27 +145,14 @@ public class AssetBundleManager
         return "";
     }
 
-
-
-    /// <summary>
-    /// 创建不存在的文件夹
-    /// </summary>
-    /// <param name="url"></param>
-    public static void CreateNoAreFolder(string url)
-    {
-        if (!Directory.Exists(url))
-        {
-            Directory.CreateDirectory(url);
-        }
-    }
-
-
     [MenuItem("BRC/生成AssetBunlde名字")]
     public static void CreateAssetBundleName()
     {
         //太坑了 AssetImporter是基于Assets的上层目录的 这样写不正确
         //string url = Application.streamingAssetsPath + @"/Notice/11";
-        AssetImporter importer = AssetImporter.GetAtPath("Assets/Res");
+
+        //AssetImporter importer = AssetImporter.GetAtPath("Assets/Res");
+        AssetImporter importer = AssetImporter.GetAtPath("Assets/Res/BRC/Building/SpritePack");
         importer.assetBundleName = "测试生成AssetBunlde名字/1245/dfgfd";
         importer.assetBundleVariant = "测试生成AssetBundle变量";
         AssetDatabase.Refresh(); //刷新编辑器 
@@ -185,7 +167,7 @@ public class AssetBundleManager
         for (int i = assetBundleNameLength - 1; i >= 0; i--)
         {
             string assetBundleName = assetBundleNames[i];
-            AssetDatabase.RemoveAssetBundleName(assetBundleName,true);
+            AssetDatabase.RemoveAssetBundleName(assetBundleName, true);
         }
         AssetDatabase.Refresh(); //刷新编辑器 
     }
@@ -193,8 +175,10 @@ public class AssetBundleManager
     [MenuItem("BRC/测试程序")]
     public static void Test44()
     {
-
-        string str= GetPlatformFolder();
+        string RScriptsUrl= Application.dataPath + @"/Scripts";
+        FileIO.CreateNoAreFolder(RScriptsUrl);
+        FileIO.CreateNoAreFile(RScriptsUrl, "R.cs");
+        /*string str = GetPlatformFolder();
         Debug.LogError(str);
 
         Debug.LogError(EditorUserBuildSettings.activeBuildTarget);
@@ -204,13 +188,13 @@ public class AssetBundleManager
         foreach (Object selected in selects)
         {
             string path = AssetDatabase.GetAssetPath(selected);
-            Debug.LogError("path:"+ path);
+            Debug.LogError("path:" + path);
             AssetImporter assetImporter = AssetImporter.GetAtPath(path);
             assetImporter.assetBundleName = selected.name;
-            Debug.LogError("selected.name:"+ selected.name);
+            Debug.LogError("selected.name:" + selected.name);
             assetImporter.assetBundleVariant = "unity";
             //assetImporter.SaveAndReimport();   
-        }
+        }*/
         AssetDatabase.Refresh();
     }
 }

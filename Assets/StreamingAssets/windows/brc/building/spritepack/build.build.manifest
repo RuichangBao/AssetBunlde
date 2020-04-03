@@ -1,0 +1,58 @@
+ManifestFileVersion: 0
+CRC: 2839128242
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 27efd5f08b66c04bcd6efad67064ffb6
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 460b4f5d62b6facbccf7c01637df8f00
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Res/BRC/Building/SpritePack/Build/fangzhigongfang.png
+- Assets/Res/BRC/Building/SpritePack/Build/manor_icon2_gaojifushi.png
+- Assets/Res/BRC/Building/SpritePack/Build/caimeichang.png
+- Assets/Res/BRC/Building/SpritePack/Build/jiuguan.png
+- Assets/Res/BRC/Building/SpritePack/Build/zhucheng.png
+- Assets/Res/BRC/Building/SpritePack/Build/tiejiangpu.png
+- Assets/Res/BRC/Building/SpritePack/Build/zhipichang.png
+- Assets/Res/BRC/Building/SpritePack/Build/xiudaoyuan.png
+- Assets/Res/BRC/Building/SpritePack/Build/gongbingying.png
+- Assets/Res/BRC/Building/SpritePack/Build/mianbaofang.png
+- Assets/Res/BRC/Building/SpritePack/Build/jinshugongfang.png
+- Assets/Res/BRC/Building/SpritePack/Build/manor_icon2_talou.png
+- Assets/Res/BRC/Building/SpritePack/Build/yangshiyangcheng.png
+- Assets/Res/BRC/Building/SpritePack/Build/putaojiuchang.png
+- Assets/Res/BRC/Building/SpritePack/Build/guoyuan.png
+- Assets/Res/BRC/Building/SpritePack/Build/kejiyanjiusuo.png
+- Assets/Res/BRC/Building/SpritePack/Build/caikuangchang.png
+- Assets/Res/BRC/Building/SpritePack/icon/icon_noread.png
+- Assets/Res/BRC/Building/SpritePack/Build/huotuigongfang.png
+- Assets/Res/BRC/Building/SpritePack/Build/shuichang.png
+- Assets/Res/BRC/Building/SpritePack/Build/niangjiuwu.png
+- Assets/Res/BRC/Building/SpritePack/Build/qibingying.png
+- Assets/Res/BRC/Building/SpritePack/Build/manor_icon2_shangchuan.png
+- Assets/Res/BRC/Building/SpritePack/Build/junliangchang.png
+- Assets/Res/BRC/Building/SpritePack/Build/bubingying.png
+- Assets/Res/BRC/Building/SpritePack/Build/shouliechang.png
+- Assets/Res/BRC/Building/SpritePack/Build/guantouchang.png
+- Assets/Res/BRC/Building/SpritePack/Build/manor_icon2_huangjiahuayuan.png
+- Assets/Res/BRC/Building/SpritePack/Build/zhitaochang.png
+- Assets/Res/BRC/Building/SpritePack/Build/sanmingzhi.png
+- Assets/Res/BRC/Building/SpritePack/icon/icon_2_2.png
+- Assets/Res/BRC/Building/SpritePack/icon/icon_read.png
+- Assets/Res/BRC/Building/SpritePack/Build/jinbichang.png
+- Assets/Res/BRC/Building/SpritePack/Build/maitian.png
+- Assets/Res/BRC/Building/SpritePack/Build/zhubaogongfang.png
+- Assets/Res/BRC/Building/SpritePack/icon/icon_2.png
+- Assets/Res/BRC/Building/SpritePack/Build/chuanwu.png
+- Assets/Res/BRC/Building/SpritePack/Build/shizhengting.png
+- Assets/Res/BRC/Building/SpritePack/Build/fengmixiaowu.png
+- Assets/Res/BRC/Building/SpritePack/Build/mucaichang.png
+- Assets/Res/BRC/Building/SpritePack/Build/zhuankuaichang.png
+Dependencies: []

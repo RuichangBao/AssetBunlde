@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 4059924512
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: icon.icon
+      Dependencies: {}
+    Info_1:
+      Name: guide.guide
+      Dependencies: {}
+    Info_2:
+      Name: zuanshi.zuanshi
+      Dependencies: {}
