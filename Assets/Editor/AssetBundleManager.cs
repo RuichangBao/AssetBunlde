@@ -176,8 +176,8 @@ public class AssetBundleManager
     public static void Test44()
     {
         string RScriptsUrl= Application.dataPath + @"/Scripts";
-        FileIO.CreateNoAreFolder(RScriptsUrl);
-        FileIO.CreateNoAreFile(RScriptsUrl, "R.cs");
+        //FileIO.CreateNoAreFolder(RScriptsUrl);
+        //FileIO.CreateNoAreFile(RScriptsUrl, "R.cs");
         /*string str = GetPlatformFolder();
         Debug.LogError(str);
 
