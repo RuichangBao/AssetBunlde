@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1823280898
+CRC: 1274462906
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -7,4 +7,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_1:
       Name: guide.guide
+      Dependencies: {}
+    Info_2:
+      Name: zuanshi.zuanshi
       Dependencies: {}

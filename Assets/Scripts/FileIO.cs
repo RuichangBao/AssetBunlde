@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 public class FileIO
@@ -30,4 +31,8 @@ public class FileIO
         }
     }
 
+    public static void WriteFileText(string url,string str)
+    {
+        File.WriteAllText(url,str);
+    }
 }

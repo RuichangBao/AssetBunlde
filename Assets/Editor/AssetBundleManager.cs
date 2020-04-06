@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Text;
 
 public class AssetBundleManager
 {
@@ -25,13 +26,23 @@ public class AssetBundleManager
         "Materials"
     };
 
+    private static StringBuilder[] stringBuilder_index = new StringBuilder[BundleType.Length];
+    private static StringBuilder[] stringBuilder_url = new StringBuilder[BundleType.Length];
+    private static Dictionary<string, Dictionary<string, string>> sb_allName = new Dictionary<string, Dictionary<string, string>>();
+
+
     [MenuItem("BRC/生成索引并打包")]
     public static void CreateAssetBundle()
     {
+
+        FileIO.CreateNoAreFile(dataPath + @"/Gen", "R.cs");
+
         dataPath = Application.dataPath;
         streamingAssetsPath = Application.streamingAssetsPath;
+        sb_allName.Clear();
 
         directory = new DirectoryInfo(dataPath + @"/Res");
+
         DirectoryInfo[] directoryInfos = directory.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
         {
@@ -41,10 +52,74 @@ public class AssetBundleManager
         {
             ReadFolder(directoryInfo.Name);
         }
-
+        WriteIndex();
         //ReadFolder("");
         AssetDatabase.Refresh(); //刷新编辑器
     }
+
+    private static void WriteIndex()
+    {
+        foreach (string bundleType in sb_allName.Keys)
+        {
+            int index = 0;
+            Dictionary<string, string> sb_res = sb_allName[bundleType];
+            StringBuilder sbName = new StringBuilder();
+            StringBuilder sbUrl = new StringBuilder();
+            sbName.Append("\n");
+            foreach (string resName in sb_res.Keys)
+            {
+                sbName.Append("\t\tpublic const int " + resName + "=" + index+";\n");
+                index++;
+                sbUrl.Append("\""+sb_res[resName]+"\",");
+            }
+            int bundleTypeIndex = 0;
+            switch (bundleType)
+            {
+                case "Prefab":
+                    bundleTypeIndex= 0;
+                    break;
+                case "SpritePack":
+                    bundleTypeIndex = 1;
+                    break;
+                case "Texture":
+                    bundleTypeIndex =2;
+                    break;
+                case "AudioClip":
+                    bundleTypeIndex = 3;
+                    break;
+                case "Data":
+                    bundleTypeIndex = 4;
+                    break;
+                case "Font":
+                    bundleTypeIndex = 5;
+                    break;
+                case "UI":
+                    bundleTypeIndex = 6;
+                    break;
+                case "Materials":
+                    bundleTypeIndex = 7;
+                    break;
+                default:
+                    break;
+            }
+            stringBuilder_index[bundleTypeIndex] = sbName;
+            stringBuilder_url[bundleTypeIndex] = sbUrl;
+        }
+        StringBuilder str = new StringBuilder();
+        str.Append("public class R\n{");
+        for (int i = 0; i < BundleType.Length; i++)
+        {
+            string bundleType = BundleType[i];
+            str.Append("\n\tpublic class "+bundleType+"\n\t{");
+            str.Append(stringBuilder_index[i]);
+            str.Append("\n\t\tpublic static string[] path = {");
+            str.Append(stringBuilder_url[i]);
+            str.Append("};\n\t}");
+        }
+        str.Append("\n}");
+        FileIO.WriteFileText(dataPath + @"/Gen/R.cs",str.ToString());
+    }
+
     /// <summary>
     /// 判断是不是打包类型
     /// </summary>
@@ -78,7 +153,7 @@ public class AssetBundleManager
             Debug.Log("读取文件夹:" + directoryInfo.Name);
             if (IsBunldeType(directoryInfo.Name))
             {
-                ReadFile(url + @"/" + directoryInfo.Name);
+                ReadFile(url + @"/" + directoryInfo.Name, directoryInfo.Name);
             }
             else
             {
@@ -91,14 +166,13 @@ public class AssetBundleManager
     /// <summary>
     /// 读取文件
     /// </summary>
-    private static void ReadFile(string url)
+    private static void ReadFile(string url,string bundleType)
     {
         string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url; //该目录下ab包的输出路径
         string resUrl = dataPath + @"/Res/" + url;
 
         DirectoryInfo directoryInfo = new DirectoryInfo(resUrl);
         DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
-        Debug.LogError(directoryInfos.Length);
         if (directoryInfos == null || directoryInfos.Length <= 0)
         {
             Debug.LogError("该文件夹下为空");
@@ -110,20 +184,46 @@ public class AssetBundleManager
             string abResUrl = resUrl + @"/" + directory.Name;
             DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
             FileInfo[] fileInfos = abDirectory.GetFiles();
-
             foreach (FileInfo fileInfo in fileInfos)
             {
-                Debug.LogError("resUrl:" + resUrl);
-                Debug.LogError(resUrl + @"/" + fileInfo.Name);
-                Debug.LogError(@"Assets/Res/" + url + @"/" + fileInfo.Name);
-                AssetImporter importer = AssetImporter.GetAtPath(@"Assets/Res/" + url);
-                importer.assetBundleName = directory.Name;
-                importer.assetBundleVariant = directory.Name;
+                if (fileInfo.Name.EndsWith(".meta"))
+                {
+                    continue;
+                }
+                //AssetImporter importer = AssetImporter.GetAtPath(@"Assets/Res/" + url);
+                //importer.assetBundleName = directory.Name;
+                //importer.assetBundleVariant = directory.Name;
+                //打索引
+                string resName = directory.Name + "_" + fileInfo.Name.Split('.')[0];
+                AddARes(bundleType,resName.ToUpper(), url + @"/" +fileInfo.Name.Split('.')[0]);
             }
 
-            BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+
+            //打包
+            //BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
+           
         }
 
+    }
+   
+
+    private static void AddARes(string bundleType,string name,string url)
+    {
+        if (!sb_allName.ContainsKey(bundleType))
+        {
+            sb_allName.Add(bundleType, new Dictionary<string, string>());
+        }
+        Dictionary<string, string> sbDic = sb_allName[bundleType];
+        if (sbDic == null)
+        {
+            sbDic = new Dictionary<string, string>();
+            sb_allName.Add(bundleType, sbDic);
+        }
+        if (sbDic == null)
+        {
+            Debug.LogError(sbDic);
+        }
+        sbDic.Add(name,url);
     }
 
     /// <summary>
@@ -175,9 +275,11 @@ public class AssetBundleManager
     [MenuItem("BRC/测试程序")]
     public static void Test44()
     {
-        string RScriptsUrl= Application.dataPath + @"/Scripts";
+        string str = "public class R \n{\n\n}";
+        FileIO.WriteFileText(Application.dataPath + @"/Gen/R.cs", str);
+
         //FileIO.CreateNoAreFolder(RScriptsUrl);
-        //FileIO.CreateNoAreFile(RScriptsUrl, "R.cs");
+
         /*string str = GetPlatformFolder();
         Debug.LogError(str);
 
