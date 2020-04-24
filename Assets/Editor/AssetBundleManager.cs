@@ -11,7 +11,7 @@ public class AssetBundleManager
     private static string dataPath;
     private static string streamingAssetsPath;
     public static string pathURL = Application.streamingAssetsPath + "/";
-    //测试提交
+
     /// <summary>
     /// 能打包的类型
     /// </summary>
@@ -53,6 +53,9 @@ public class AssetBundleManager
             ReadFolder(directoryInfo.Name);
         }
         WriteIndex();
+        string outputPath = Path.Combine(pathURL, GetPlatformFolder());
+        FileIO.CreateNoAreFolder(outputPath);
+        BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
         //ReadFolder("");
         AssetDatabase.Refresh(); //刷新编辑器
     }
@@ -164,12 +167,19 @@ public class AssetBundleManager
     }
 
     /// <summary>
-    /// 读取文件
+    /// 读取文件 
     /// </summary>
-    private static void ReadFile(string url,string bundleType)
+    private static void ReadFile(string url, string bundleType)
     {
-        string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url; //该目录下ab包的输出路径
+
         string resUrl = dataPath + @"/Res/" + url;
+
+        //该目录下ab包的输出路径
+        string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url;
+        abUrl = abUrl.ToLower();
+        //Debug.LogError("输出路径abUrl:" + abUrl);
+        //FileIO.CreateNoAreFolder(abUrl);
+
 
         DirectoryInfo directoryInfo = new DirectoryInfo(resUrl);
         DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
@@ -178,11 +188,13 @@ public class AssetBundleManager
             Debug.LogError("该文件夹下为空");
             return;
         }
-        FileIO.CreateNoAreFolder((abUrl).ToLower());//创建AB包文件夹
         foreach (DirectoryInfo directory in directoryInfos)
-        { //directory.Name ab包的名字 
+        {
+            //directory.Name ab包的名字 
             string abResUrl = resUrl + @"/" + directory.Name;
             DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
+
+            //读取需要打包的文件 所以文件格式必须是 BundleType/包名/资源
             FileInfo[] fileInfos = abDirectory.GetFiles();
             foreach (FileInfo fileInfo in fileInfos)
             {
@@ -190,24 +202,18 @@ public class AssetBundleManager
                 {
                     continue;
                 }
-                //AssetImporter importer = AssetImporter.GetAtPath(@"Assets/Res/" + url);
-                //importer.assetBundleName = directory.Name;
+                //设置单个文件ab包的名字
+                string file = @"Assets/Res/" + url + @"/" + abDirectory.Name + @"/" + fileInfo.Name;
+                string abName = url + @"/" + abDirectory.Name;
+                AssetImporter importer = AssetImporter.GetAtPath(file);
+                importer.assetBundleName = abName;
                 //importer.assetBundleVariant = directory.Name;
-                //打索引
-                string resName = directory.Name + "_" + fileInfo.Name.Split('.')[0];
-                AddARes(bundleType,resName.ToUpper(), url + @"/" +fileInfo.Name.Split('.')[0]);
             }
-
-
-            //打包
-            //BuildPipeline.BuildAssetBundles(abUrl, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
-           
         }
-
     }
    
 
-    private static void AddARes(string bundleType,string name,string url)
+    private static void AddAResIndex(string bundleType,string name,string url)
     {
         if (!sb_allName.ContainsKey(bundleType))
         {

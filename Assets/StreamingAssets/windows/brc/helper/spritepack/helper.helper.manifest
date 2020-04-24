@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 641796077
+CRC: 4133600105
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d395b3a1c0fe64b1df6112e18b1fbb3d
+    Hash: f7905ab4fe55ab4588381ce99e395b9c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 460b4f5d62b6facbccf7c01637df8f00
@@ -14,24 +14,16 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon5.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon7.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdphl.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon4.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_wjts.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_wjzl.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_wjym.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_wjsx.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon3.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdsl.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdsq.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdsd.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon6.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon8.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdsx.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdfyl.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_wjhh.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon1.png
 - Assets/Res/BRC/Helper/SpritePack/Helper/help_bdgjl.png
-- Assets/Res/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon2.png
 Dependencies: []

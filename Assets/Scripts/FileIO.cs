@@ -11,6 +11,13 @@ public class FileIO
     /// </summary>
     private static bool isEditor = true;
 
+
+    private static AssetBundleManifest assetBundleManifest;
+    /// <summary>
+    /// ab资源缓存
+    /// </summary>
+    private static Dictionary<string, AssetBundle> map_ab = new Dictionary<string, AssetBundle>();
+
     /// <summary>
     /// 精灵缓存
     /// </summary>
@@ -38,7 +45,7 @@ public class FileIO
             sprite = map_sprite[spriteName];
             if (sprite != null)
                 return sprite;
-            else 
+            else
             {
                 map_sprite.Remove(spriteName);
             }
@@ -46,14 +53,32 @@ public class FileIO
         if (isEditor)
         {
             sprite = Resources.Load<Sprite>(spriteName);
-            map_sprite.Add(spriteName,sprite);
+            map_sprite.Add(spriteName, sprite);
             return sprite;
         }
         return sprite;
     }
 
+    public static AssetBundle LoadAssetBundle(string abName)
+    {
+        if (map_ab.ContainsKey(abName) && map_ab[abName] != null)
+            return map_ab[abName];
+        AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
+        //ab = AssetBundle.LoadFromFile(path);//优先远程地址
+        return null;
+    }
 
-
+    public static AssetBundleManifest LoadAssetBundleManifest()
+    {
+        if (assetBundleManifest == null)
+        {
+            string path = "";
+            AssetBundle manifestBundle = AssetBundle.LoadFromFile(path);
+            assetBundleManifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            manifestBundle.Unload(false);
+        }
+        return assetBundleManifest;
+    }
 
 
 
@@ -97,8 +122,13 @@ public class FileIO
         }
     }
 
-    public static void WriteFileText(string url,string str)
+    public static void WriteFileText(string url, string str)
     {
-        File.WriteAllText(url,str);
+        File.WriteAllText(url, str);
+    }
+
+    public static bool FileExists(string path)
+    {
+        return true;
     }
 }

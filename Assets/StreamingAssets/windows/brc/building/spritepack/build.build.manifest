@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2839128242
+CRC: 2895218165
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 211a7542a2a3f89beb36893600ea01ee
+    Hash: 6cc6d3907f082f1d5f878434ff171831
   TypeTreeHash:
     serializedVersion: 2
     Hash: 460b4f5d62b6facbccf7c01637df8f00
@@ -31,7 +31,6 @@ Assets:
 - Assets/Res/BRC/Building/SpritePack/Build/guoyuan.png
 - Assets/Res/BRC/Building/SpritePack/Build/kejiyanjiusuo.png
 - Assets/Res/BRC/Building/SpritePack/Build/caikuangchang.png
-- Assets/Res/BRC/Building/SpritePack/icon/icon_noread.png
 - Assets/Res/BRC/Building/SpritePack/Build/huotuigongfang.png
 - Assets/Res/BRC/Building/SpritePack/Build/shuichang.png
 - Assets/Res/BRC/Building/SpritePack/Build/niangjiuwu.png
@@ -44,12 +43,9 @@ Assets:
 - Assets/Res/BRC/Building/SpritePack/Build/manor_icon2_huangjiahuayuan.png
 - Assets/Res/BRC/Building/SpritePack/Build/zhitaochang.png
 - Assets/Res/BRC/Building/SpritePack/Build/sanmingzhi.png
-- Assets/Res/BRC/Building/SpritePack/icon/icon_2_2.png
-- Assets/Res/BRC/Building/SpritePack/icon/icon_read.png
 - Assets/Res/BRC/Building/SpritePack/Build/jinbichang.png
 - Assets/Res/BRC/Building/SpritePack/Build/maitian.png
 - Assets/Res/BRC/Building/SpritePack/Build/zhubaogongfang.png
-- Assets/Res/BRC/Building/SpritePack/icon/icon_2.png
 - Assets/Res/BRC/Building/SpritePack/Build/chuanwu.png
 - Assets/Res/BRC/Building/SpritePack/Build/shizhengting.png
 - Assets/Res/BRC/Building/SpritePack/Build/fengmixiaowu.png

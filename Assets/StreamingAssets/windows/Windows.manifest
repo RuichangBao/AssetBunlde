@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 544582543
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: brc/building/spritepack/build.build
+      Dependencies: {}
+    Info_1:
+      Name: brc/building/spritepack/icon.icon
+      Dependencies: {}
+    Info_2:
+      Name: brc/guide/spritepack/guide.guide
+      Dependencies: {}
+    Info_3:
+      Name: brc/helper/spritepack/helper.helper
+      Dependencies: {}
+    Info_4:
+      Name: brc/helper/spritepack/zuanshi.zuanshi
+      Dependencies: {}
