@@ -11,7 +11,7 @@ public class AssetBundleManager
     private static string dataPath;
     private static string streamingAssetsPath;
     public static string pathURL = Application.streamingAssetsPath + "/";
-
+    //测试提交
     /// <summary>
     /// 能打包的类型
     /// </summary>
