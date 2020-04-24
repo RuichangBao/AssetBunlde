@@ -11,6 +11,8 @@ public class AssetBundleManager
     private static string dataPath;
     private static string streamingAssetsPath;
     public static string pathURL = Application.streamingAssetsPath + "/";
+    public static string editorUrl;
+ 
 
     /// <summary>
     /// 能打包的类型
@@ -34,14 +36,14 @@ public class AssetBundleManager
     [MenuItem("BRC/生成索引并打包")]
     public static void CreateAssetBundle()
     {
-
+        
         FileIO.CreateNoAreFile(dataPath + @"/Gen", "R.cs");
 
         dataPath = Application.dataPath;
         streamingAssetsPath = Application.streamingAssetsPath;
         sb_allName.Clear();
-
-        directory = new DirectoryInfo(dataPath + @"/Res");
+        ClearAssetBundleNames();
+        directory = new DirectoryInfo(dataPath + @"/Resources");
 
         DirectoryInfo[] directoryInfos = directory.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
@@ -53,13 +55,17 @@ public class AssetBundleManager
             ReadFolder(directoryInfo.Name);
         }
         WriteIndex();
-        string outputPath = Path.Combine(pathURL, GetPlatformFolder());
-        FileIO.CreateNoAreFolder(outputPath);
-        BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-        //ReadFolder("");
+        if(!FileIO.isEditor)
+        {
+            string outputPath = Path.Combine(pathURL, GetPlatformFolder());
+            FileIO.CreateNoAreFolder(outputPath);
+            BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        }
         AssetDatabase.Refresh(); //刷新编辑器
     }
-
+    /// <summary>
+    /// 打索引
+    /// </summary>
     private static void WriteIndex()
     {
         foreach (string bundleType in sb_allName.Keys)
@@ -147,13 +153,12 @@ public class AssetBundleManager
     /// <returns></returns>
     private static DirectoryInfo[] ReadFolder(string url)
     {
-        directory = new DirectoryInfo(dataPath + @"/Res/" + url);
+        directory = new DirectoryInfo(dataPath + @"/Resources/" + url);
         DirectoryInfo[] directoryInfos = directory.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
             return null;
         foreach (DirectoryInfo directoryInfo in directoryInfos)
         {
-            Debug.Log("读取文件夹:" + directoryInfo.Name);
             if (IsBunldeType(directoryInfo.Name))
             {
                 ReadFile(url + @"/" + directoryInfo.Name, directoryInfo.Name);
@@ -172,7 +177,7 @@ public class AssetBundleManager
     private static void ReadFile(string url, string bundleType)
     {
 
-        string resUrl = dataPath + @"/Res/" + url;
+        string resUrl = dataPath + @"/Resources/" + url;
 
         //该目录下ab包的输出路径
         string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url;
@@ -202,12 +207,14 @@ public class AssetBundleManager
                 {
                     continue;
                 }
-                //设置单个文件ab包的名字
-                string file = @"Assets/Res/" + url + @"/" + abDirectory.Name + @"/" + fileInfo.Name;
-                string abName = url + @"/" + abDirectory.Name;
-                AssetImporter importer = AssetImporter.GetAtPath(file);
-                importer.assetBundleName = abName;
-                //importer.assetBundleVariant = directory.Name;
+                if (!FileIO.isEditor)
+                { //设置单个文件ab包的名字
+                    string file = @"Assets/Resources/" + url + @"/" + abDirectory.Name + @"/" + fileInfo.Name;
+                    string abName = url + @"/" + abDirectory.Name;
+                    AssetImporter importer = AssetImporter.GetAtPath(file);
+                    importer.assetBundleName = abName;
+                }
+                AddAResIndex(bundleType, (abDirectory.Name+"_"+ fileInfo.Name.Split('.')[0]).ToUpper(), url+@"/"+ abDirectory.Name + @"/" + fileInfo.Name.Split('.')[0]);
             }
         }
     }
@@ -241,12 +248,12 @@ public class AssetBundleManager
         switch (EditorUserBuildSettings.activeBuildTarget)
         {
             case BuildTarget.iOS:
-                return "Ios";
+                return "ios";
             case BuildTarget.Android:
-                return "Android";
+                return "android";
             case BuildTarget.StandaloneWindows:
             case BuildTarget.StandaloneWindows64:
-                return "Windows";
+                return "windows";
         }
         return "";
     }
@@ -264,7 +271,9 @@ public class AssetBundleManager
         AssetDatabase.Refresh(); //刷新编辑器 
     }
 
-
+    /// <summary>
+    /// 清除AssetBunlde名字
+    /// </summary>
     [MenuItem("BRC/清除AssetBunlde名字")]
     public static void ClearAssetBundleNames()
     {
@@ -275,7 +284,7 @@ public class AssetBundleManager
             string assetBundleName = assetBundleNames[i];
             AssetDatabase.RemoveAssetBundleName(assetBundleName, true);
         }
-        AssetDatabase.Refresh(); //刷新编辑器 
+        //AssetDatabase.Refresh(); //刷新编辑器 
     }
 
     [MenuItem("BRC/测试程序")]
