@@ -2,7 +2,11 @@ public class R
 {
 	public class Prefab
 	{
-		public static string[] path = {};
+		public const int CAPSULE=0;
+		public const int AAA_CUBE=1;
+		public const int AAA_IMAGE=2;
+
+		public static string[] path = {"BRC/Building/Prefab/Capsule","BRC/Building/Prefab/AAA/Cube","BRC/Building/Prefab/AAA/Image",};
 	}
 	public class SpritePack
 	{
@@ -83,18 +87,6 @@ public class R
 		public static string[] path = {};
 	}
 	public class AudioClip
-	{
-		public static string[] path = {};
-	}
-	public class Data
-	{
-		public static string[] path = {};
-	}
-	public class Font
-	{
-		public static string[] path = {};
-	}
-	public class UI
 	{
 		public static string[] path = {};
 	}

@@ -35,6 +35,7 @@ public class FileIO
     /// </summary>
     private static Dictionary<string, Sprite> map_sprite = new Dictionary<string, Sprite>();
 
+    private static Dictionary<string, GameObject> map_obj = new Dictionary<string, GameObject>();
 
     /// <summary>
     /// 加载Srpite
@@ -75,7 +76,6 @@ public class FileIO
         {
             string[] urls = spriteName.Split('/');
             string abName = spriteName.Substring(0, spriteName.Length - 1 - (urls[urls.Length - 1]).Length);
-            Debug.LogError("abName     :"+ abName);
             AssetBundle ab = LoadAssetBundle(abName);
             if (ab == null)
             {
@@ -90,6 +90,52 @@ public class FileIO
         return sprite;
     }
 
+    public static GameObject LoadPrefab(int prefabIndex)
+    {
+        string prefabName = R.Prefab.path[prefabIndex];
+        GameObject prefab = LoadPrefab(prefabName);
+        if (prefab == null)
+        {
+            Debug.LogError("加载预制体为空");
+        }
+        return prefab;
+    }
+
+    public static GameObject LoadPrefab(string prefabName)
+    {
+        if (isEditor)
+        {
+            return Resources.Load<GameObject>(prefabName);
+        }
+
+        if (map_obj.ContainsKey(prefabName))
+        {
+            if (map_obj[prefabName] != null)
+            {
+                return map_obj[prefabName];
+            }
+            else
+            {
+                map_obj.Remove(prefabName);
+            }
+        }
+        AssetBundle ab = LoadAssetBundle(prefabName);
+        if (ab == null)
+        {
+            Debug.LogError("加载ab包为空");
+            return null;
+        }
+        string[] urls = prefabName.Split('/');
+        GameObject obj = ab.LoadAsset<GameObject>(urls[urls.Length-1]);
+        if (obj == null)
+        {
+            Debug.LogError("加载出的预制体为空");
+            return null;
+        }
+        map_obj.Add(prefabName, obj);
+        return obj;
+    }
+
     public static AssetBundle LoadAssetBundle(string abName)
     {
         if (map_ab.ContainsKey(abName))
@@ -101,14 +147,34 @@ public class FileIO
         }
 
         AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
+        //加载 Prefab+文件夹+预制体格式的ab包文件
         string abUrl = Application.streamingAssetsPath + platform_path + abName.ToLower();
-        AssetBundle ab = AssetBundle.LoadFromFile(abUrl);
-        if (ab == null)
+        AssetBundle ab;
+        try
         {
-            Debug.LogError("本地加载ab包错误 加载出来的AB包为空");
-            return null;
+            ab = AssetBundle.LoadFromFile(abUrl);
+            if (ab != null)
+            {
+                map_ab.Add(abName, ab);
+                return ab;
+            }
         }
-        map_ab.Add(abName, ab);
+        catch (System.Exception)
+        {
+            //加载 Prefab+预制体格式的ab包文件
+            abUrl = abUrl.Substring(0, abUrl.LastIndexOf('/'));
+            ab = AssetBundle.LoadFromFile(abUrl);
+            if (ab != null)
+            {
+                map_ab.Add(abName, ab);
+                return ab;
+            }
+            throw;
+        }
+
+
+
+        Debug.LogError("加载Ab包为空");
         return null;
     }
 
@@ -117,7 +183,6 @@ public class FileIO
         if (assetBundleManifest == null)
         {
             string path = Application.streamingAssetsPath+ platform_path+ platform;
-            Debug.LogError("加载依赖文件 path:" + path);
             
             AssetBundle manifestBundle = AssetBundle.LoadFromFile(path);
             assetBundleManifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");

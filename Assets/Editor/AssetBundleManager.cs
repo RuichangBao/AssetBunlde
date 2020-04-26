@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using System;
 
 public class AssetBundleManager
 {
@@ -22,9 +23,6 @@ public class AssetBundleManager
         "SpritePack",
         "Texture",
         "AudioClip",
-        "Data",
-        "Font",
-        "UI",
         "Materials"
     };
 
@@ -81,35 +79,11 @@ public class AssetBundleManager
                 index++;
                 sbUrl.Append("\""+sb_res[resName]+"\",");
             }
-            int bundleTypeIndex = 0;
-            switch (bundleType)
+            int bundleTypeIndex = Array.IndexOf(BundleType,bundleType);
+            if (bundleTypeIndex < 0)
             {
-                case "Prefab":
-                    bundleTypeIndex= 0;
-                    break;
-                case "SpritePack":
-                    bundleTypeIndex = 1;
-                    break;
-                case "Texture":
-                    bundleTypeIndex =2;
-                    break;
-                case "AudioClip":
-                    bundleTypeIndex = 3;
-                    break;
-                case "Data":
-                    bundleTypeIndex = 4;
-                    break;
-                case "Font":
-                    bundleTypeIndex = 5;
-                    break;
-                case "UI":
-                    bundleTypeIndex = 6;
-                    break;
-                case "Materials":
-                    bundleTypeIndex = 7;
-                    break;
-                default:
-                    break;
+                Debug.LogError("类型错误，无法打索引");
+                continue;
             }
             stringBuilder_index[bundleTypeIndex] = sbName;
             stringBuilder_url[bundleTypeIndex] = sbUrl;
@@ -182,11 +156,32 @@ public class AssetBundleManager
         //该目录下ab包的输出路径
         string abUrl = streamingAssetsPath + @"/" + GetPlatformFolder() + @"/" + url;
         abUrl = abUrl.ToLower();
-        //Debug.LogError("输出路径abUrl:" + abUrl);
-        //FileIO.CreateNoAreFolder(abUrl);
+
 
 
         DirectoryInfo directoryInfo = new DirectoryInfo(resUrl);
+        /*****************************读取当前文件夹下的文件，单独打成ab包 Start*************************************/
+        FileInfo[] fileInfos = directoryInfo.GetFiles();
+        foreach (FileInfo fileInfo in fileInfos)
+        {
+            if (fileInfo.Name.EndsWith(".meta"))
+            {
+                continue;
+            }
+            string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
+            if (!FileIO.isEditor)
+            { //设置单个文件ab包的名字
+                string file = @"Assets/Resources/" + url + @"/" + fileInfo.Name;
+
+                string abName = url + @"/" + fileName;
+                AssetImporter importer = AssetImporter.GetAtPath(file);
+                importer.assetBundleName = abName;
+            }
+            AddAResIndex(bundleType, fileName.ToUpper(), url + @"/" + fileName);
+        }
+        /*****************************读取当前文件夹下的文件，单独打成ab包 End*************************************/
+
+        /*****************************读取当前文件夹下的文件夹，一个文件夹打成一个ab包 Start*************************************/
         DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
         {
@@ -200,8 +195,8 @@ public class AssetBundleManager
             DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
 
             //读取需要打包的文件 所以文件格式必须是 BundleType/包名/资源
-            FileInfo[] fileInfos = abDirectory.GetFiles();
-            foreach (FileInfo fileInfo in fileInfos)
+            FileInfo[] fileInfos2 = abDirectory.GetFiles();
+            foreach (FileInfo fileInfo in fileInfos2)
             {
                 if (fileInfo.Name.EndsWith(".meta"))
                 {
@@ -214,11 +209,70 @@ public class AssetBundleManager
                     AssetImporter importer = AssetImporter.GetAtPath(file);
                     importer.assetBundleName = abName;
                 }
-                AddAResIndex(bundleType, (abDirectory.Name+"_"+ fileInfo.Name.Split('.')[0]).ToUpper(), url+@"/"+ abDirectory.Name + @"/" + fileInfo.Name.Split('.')[0]);
+                string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
+                AddAResIndex(bundleType, (abDirectory.Name + "_" + fileName).ToUpper(), url + @"/" + abDirectory.Name + @"/" + fileName);
             }
         }
+        /*****************************读取当前文件夹下的文件夹，一个文件夹打成一个ab包 End*************************************/
+        
+        #region
+        /*if (isSprite)  //是图集
+       {
+           if (directoryInfos == null || directoryInfos.Length <= 0)
+           {
+               Debug.LogError("该文件夹下为空");
+               return;
+           }
+           foreach (DirectoryInfo directory in directoryInfos)
+           {
+               //directory.Name ab包的名字 
+               string abResUrl = resUrl + @"/" + directory.Name;
+               DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
+
+               //读取需要打包的文件 所以文件格式必须是 BundleType/包名/资源
+               FileInfo[] fileInfos = abDirectory.GetFiles();
+               foreach (FileInfo fileInfo in fileInfos)
+               {
+                   if (fileInfo.Name.EndsWith(".meta"))
+                   {
+                       continue;
+                   }
+                   if (!FileIO.isEditor)
+                   { //设置单个文件ab包的名字
+                       string file = @"Assets/Resources/" + url + @"/" + abDirectory.Name + @"/" + fileInfo.Name;
+                       string abName = url + @"/" + abDirectory.Name;
+                       AssetImporter importer = AssetImporter.GetAtPath(file);
+                       importer.assetBundleName = abName;
+                   }
+                   string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
+                   AddAResIndex(bundleType, (abDirectory.Name + "_" + fileName).ToUpper(), url + @"/" + abDirectory.Name + @"/" + fileName);
+               }
+           }
+       }
+       else  //其他资源
+       {
+           FileInfo[] fileInfos = directoryInfo.GetFiles();
+           foreach (FileInfo fileInfo in fileInfos)
+           {
+               if (fileInfo.Name.EndsWith(".meta"))
+               {
+                   continue;
+               }
+               string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
+               if (!FileIO.isEditor)
+               { //设置单个文件ab包的名字
+                   string file = @"Assets/Resources/" + url + @"/" + fileInfo.Name;
+
+                   string abName = url + @"/" + fileName;
+                   AssetImporter importer = AssetImporter.GetAtPath(file);
+                   importer.assetBundleName = abName;
+               }
+               AddAResIndex(bundleType, fileName.ToUpper(), url + @"/" + fileName);
+           }
+       }*/
+        #endregion
     }
-   
+
 
     private static void AddAResIndex(string bundleType,string name,string url)
     {
@@ -290,9 +344,13 @@ public class AssetBundleManager
     [MenuItem("BRC/测试程序")]
     public static void Test44()
     {
-        string str = "public class R \n{\n\n}";
-        FileIO.WriteFileText(Application.dataPath + @"/Gen/R.cs", str);
+        int[] nums = new int[] { 1, 2, 3, 4, 5, 6 };
 
+        Debug.LogError(Array.IndexOf(nums,1));
+        Debug.LogError(Array.IndexOf(nums, 100));
+        string str = "dafsdaf.dasfadsf.dsafsafasdf";
+        Debug.LogError(str.IndexOf('.'));
+        Debug.LogError(str.LastIndexOf('.'));
         //FileIO.CreateNoAreFolder(RScriptsUrl);
 
         /*string str = GetPlatformFolder();
