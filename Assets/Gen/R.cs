@@ -91,10 +91,15 @@ public class R
 	}
 	public class AudioClip
 	{
-		public static string[] path = {};
+		public const int TESTAUDIOCLIP_LOGINBGM=0;
+		public const int BGM=1;
+
+		public static string[] path = {"BRC/Building/AudioClip/TestAudioClip/LoginBgm","BRC/Building/AudioClip/bgm",};
 	}
 	public class Materials
 	{
-		public static string[] path = {};
+		public const int TESTMATERIALS_TESTMATERIAL=0;
+
+		public static string[] path = {"BRC/Building/Materials/TestMaterials/TestMaterial",};
 	}
 }

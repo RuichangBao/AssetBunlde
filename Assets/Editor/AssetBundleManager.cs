@@ -305,6 +305,6 @@ public class AssetBundleManager
             assetImporter.assetBundleVariant = "unity";
             //assetImporter.SaveAndReimport();   
         }*/
-        AssetDatabase.Refresh();
+        //AssetDatabase.Refresh();
     }
 }

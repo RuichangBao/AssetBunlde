@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -21,7 +22,7 @@ public class FileIO
     /// <summary>
     /// 是不是在编辑器模式下，在编辑器模式下读取Resources文件夹下文件
     /// </summary>
-    public static bool isEditor = true;
+    public static bool isEditor = false;
 
 
     private static AssetBundleManifest assetBundleManifest;
@@ -35,7 +36,17 @@ public class FileIO
     /// </summary>
     private static Dictionary<string, Sprite> map_sprite = new Dictionary<string, Sprite>();
 
+    /// <summary>
+    /// 图集缓存
+    /// </summary>
     private static Dictionary<string, Texture2D> map_texture2D = new Dictionary<string, Texture2D>();
+
+    /// <summary>
+    /// 材质缓存
+    /// </summary>
+    private static Dictionary<string, Material> map_material = new Dictionary<string, Material>();
+
+    private static Dictionary<string, AudioClip> map_audioClip = new Dictionary<string, AudioClip>();
 
     /// <summary>
     /// ab包缓存
@@ -124,8 +135,11 @@ public class FileIO
                 map_obj.Remove(prefabName);
             }
         }
+
+        string abName = prefabName.Substring(0, prefabName.LastIndexOf('/'));
        
-        AssetBundle ab = LoadAssetBundle(prefabName.Substring(0, prefabName.LastIndexOf('/')));
+        AssetBundle ab = LoadAssetBundle(abName);
+        LoadDependencies(abName);
         if (ab == null)
         {
             Debug.LogError("加载ab包为空");
@@ -187,7 +201,98 @@ public class FileIO
         return texture2D;
     }
 
-    public static AssetBundle LoadAssetBundle(string abName)
+    public static Material LoadMaterial(int materialIndex)
+    {
+        string materialName = R.Materials.path[materialIndex];
+        Material material = LoadMaterial(materialName);
+        if (material == null)
+        {
+            Debug.LogError("加载材质为空");
+        }
+        return material;
+    }
+
+    private static Material LoadMaterial(string materialName)
+    {
+        if (isEditor)
+            return Resources.Load<Material>(materialName);
+        if (map_material.ContainsKey(materialName))
+        {
+            if (map_material[materialName] != null)
+                return map_material[materialName];
+            else
+                map_material.Remove(materialName);
+        }
+
+        string abName = materialName.Substring(0, materialName.LastIndexOf('/'));
+        LoadDependencies(abName);
+        AssetBundle ab = LoadAssetBundle(abName);
+
+
+        if (ab == null)
+        {
+            Debug.LogError("加载材质时 加载ab为空");
+            return null;
+        }
+        string[] urls = materialName.Split('/');
+        Material material = ab.LoadAsset<Material>(urls[urls.Length - 1]);
+        if (material == null)
+        {
+            Debug.LogError("加载材质为空");
+            return null;
+        }
+
+        map_material.Add(materialName, material);
+        return material;
+    }
+
+    public static AudioClip LoadAudioClip(int audioClipIndex)
+    {
+        string audioClipName = R.AudioClip.path[audioClipIndex];
+        AudioClip audioClip = LoadAudioClip(audioClipName);
+        if (audioClip == null)
+        {
+            Debug.LogError("加载音频为空");
+        }
+        return audioClip;
+    }
+
+    private static AudioClip LoadAudioClip(string audioClipName)
+    {
+        if (isEditor)
+        {
+            return Resources.Load<AudioClip>(audioClipName);
+        }
+
+        if (map_audioClip.ContainsKey(audioClipName))
+        {
+            if (map_audioClip[audioClipName] != null)
+                return map_audioClip[audioClipName];
+            else
+                map_audioClip.Remove(audioClipName);
+        }
+        string abName = audioClipName.Substring(0, audioClipName.LastIndexOf('/'));
+        AssetBundle ab = LoadAssetBundle(abName);
+        if (ab == null)
+        {
+            Debug.LogError("加载音频时，ab包为空");
+            return null;
+        }
+
+        string[] urls = audioClipName.Split('/');
+        Debug.LogError(urls[urls.Length - 1]);
+        AudioClip audioClip = ab.LoadAsset<AudioClip>(urls[urls.Length-1]);
+        if (audioClip == null)
+        {
+            Debug.LogError("加载音频为空");
+            return null;
+        }
+
+        map_audioClip.Add(audioClipName,audioClip);
+        return audioClip;
+    }
+
+    private static AssetBundle LoadAssetBundle(string abName)
     {
         if (map_ab.ContainsKey(abName))
         {
@@ -197,7 +302,7 @@ public class FileIO
                 map_ab.Remove(abName);
         }
 
-        AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
+        //AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
         //加载 Prefab+文件夹+预制体格式的ab包文件
         string abUrl = Application.streamingAssetsPath + platform_path + abName.ToLower();
         AssetBundle ab= AssetBundle.LoadFromFile(abUrl);
@@ -223,7 +328,22 @@ public class FileIO
         }
         return assetBundleManifest;
     }
-
+    /// <summary>
+    /// 加载依赖(注意 不能在加载AB包的时候 加载依赖 如果 出现)
+    /// </summary>
+    /// <param name="abName"></param>
+    public static void LoadDependencies(string abName)
+    {
+        AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
+        string[] dependencies = assetBundleManifest.GetAllDependencies(abName);
+        if (dependencies == null || dependencies.Length <= 0)
+            return;
+        Debug.LogError("加载依赖abName:"+abName);
+        foreach (string item in dependencies)
+        {
+            LoadAssetBundle(item);
+        }
+    }
 
 
 
