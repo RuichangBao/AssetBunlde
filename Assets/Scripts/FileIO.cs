@@ -49,7 +49,7 @@ public class FileIO
     private static Dictionary<string, AudioClip> map_audioClip = new Dictionary<string, AudioClip>();
 
     /// <summary>
-    /// ab包缓存
+    /// 预制体缓存
     /// </summary>
     private static Dictionary<string, GameObject> map_obj = new Dictionary<string, GameObject>();
 

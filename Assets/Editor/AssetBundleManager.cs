@@ -52,13 +52,14 @@ public class AssetBundleManager
         {
             ReadFolder(directoryInfo.Name);
         }
-        WriteIndex();
+       
         if(!FileIO.isEditor)
         {
             string outputPath = Path.Combine(pathURL, GetPlatformFolder());
             FileIO.CreateNoAreFolder(outputPath);
             BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
         }
+        WriteIndex();
         //AssetDatabase.Refresh(); //刷新编辑器
     }
     /// <summary>
@@ -101,7 +102,11 @@ public class AssetBundleManager
         }
         str.Append("\n}");
         FileIO.WriteFileText(dataPath + @"/Gen/R.cs",str.ToString());
-    }
+
+        //stringBuilder_index.
+        //stringBuilder_url.cle
+        sb_allName.Clear();
+}
 
     /// <summary>
     /// 判断是不是打包类型
