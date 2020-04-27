@@ -59,7 +59,7 @@ public class AssetBundleManager
             FileIO.CreateNoAreFolder(outputPath);
             BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
         }
-        AssetDatabase.Refresh(); //刷新编辑器
+        //AssetDatabase.Refresh(); //刷新编辑器
     }
     /// <summary>
     /// 打索引
@@ -160,34 +160,15 @@ public class AssetBundleManager
 
 
         DirectoryInfo directoryInfo = new DirectoryInfo(resUrl);
-        /*****************************读取当前文件夹下的文件，单独打成ab包 Start*************************************/
-        FileInfo[] fileInfos = directoryInfo.GetFiles();
-        foreach (FileInfo fileInfo in fileInfos)
-        {
-            if (fileInfo.Name.EndsWith(".meta"))
-            {
-                continue;
-            }
-            string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
-            if (!FileIO.isEditor)
-            { //设置单个文件ab包的名字
-                string file = @"Assets/Resources/" + url + @"/" + fileInfo.Name;
-
-                string abName = url + @"/" + fileName;
-                AssetImporter importer = AssetImporter.GetAtPath(file);
-                importer.assetBundleName = abName;
-            }
-            AddAResIndex(bundleType, fileName.ToUpper(), url + @"/" + fileName);
-        }
-        /*****************************读取当前文件夹下的文件，单独打成ab包 End*************************************/
+       
 
         /*****************************读取当前文件夹下的文件夹，一个文件夹打成一个ab包 Start*************************************/
         DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
         if (directoryInfos == null || directoryInfos.Length <= 0)
         {
-            Debug.LogError("该文件夹下为空");
             return;
         }
+        
         foreach (DirectoryInfo directory in directoryInfos)
         {
             //directory.Name ab包的名字 
@@ -214,63 +195,30 @@ public class AssetBundleManager
             }
         }
         /*****************************读取当前文件夹下的文件夹，一个文件夹打成一个ab包 End*************************************/
-        
-        #region
-        /*if (isSprite)  //是图集
-       {
-           if (directoryInfos == null || directoryInfos.Length <= 0)
-           {
-               Debug.LogError("该文件夹下为空");
-               return;
-           }
-           foreach (DirectoryInfo directory in directoryInfos)
-           {
-               //directory.Name ab包的名字 
-               string abResUrl = resUrl + @"/" + directory.Name;
-               DirectoryInfo abDirectory = new DirectoryInfo(abResUrl);
 
-               //读取需要打包的文件 所以文件格式必须是 BundleType/包名/资源
-               FileInfo[] fileInfos = abDirectory.GetFiles();
-               foreach (FileInfo fileInfo in fileInfos)
-               {
-                   if (fileInfo.Name.EndsWith(".meta"))
-                   {
-                       continue;
-                   }
-                   if (!FileIO.isEditor)
-                   { //设置单个文件ab包的名字
-                       string file = @"Assets/Resources/" + url + @"/" + abDirectory.Name + @"/" + fileInfo.Name;
-                       string abName = url + @"/" + abDirectory.Name;
-                       AssetImporter importer = AssetImporter.GetAtPath(file);
-                       importer.assetBundleName = abName;
-                   }
-                   string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
-                   AddAResIndex(bundleType, (abDirectory.Name + "_" + fileName).ToUpper(), url + @"/" + abDirectory.Name + @"/" + fileName);
-               }
-           }
-       }
-       else  //其他资源
-       {
-           FileInfo[] fileInfos = directoryInfo.GetFiles();
-           foreach (FileInfo fileInfo in fileInfos)
-           {
-               if (fileInfo.Name.EndsWith(".meta"))
-               {
-                   continue;
-               }
-               string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
-               if (!FileIO.isEditor)
-               { //设置单个文件ab包的名字
-                   string file = @"Assets/Resources/" + url + @"/" + fileInfo.Name;
 
-                   string abName = url + @"/" + fileName;
-                   AssetImporter importer = AssetImporter.GetAtPath(file);
-                   importer.assetBundleName = abName;
-               }
-               AddAResIndex(bundleType, fileName.ToUpper(), url + @"/" + fileName);
-           }
-       }*/
-        #endregion
+        /*****************************读取当前文件夹下的文件，单独打成ab包 Start*************************************/
+        FileInfo[] fileInfos = directoryInfo.GetFiles();
+        foreach (FileInfo fileInfo in fileInfos)
+        {
+            if (fileInfo.Name.EndsWith(".meta"))
+            {
+                continue;
+            }
+            string fileName = fileInfo.Name.Substring(0, fileInfo.Name.LastIndexOf('.'));
+           
+            if (!FileIO.isEditor)
+            { //设置单个文件ab包的名字
+                string file = @"Assets/Resources/" + url + @"/" + fileInfo.Name;
+                Debug.LogWarning("该文件夹下的文件不能被加载 "+file);
+                string abName = url + @"/" + fileName;
+                AssetImporter importer = AssetImporter.GetAtPath(file);
+                importer.assetBundleName = abName;
+            }
+            AddAResIndex(bundleType, fileName.ToUpper(), url + @"/" + fileName);
+        }
+        /*****************************读取当前文件夹下的文件，单独打成ab包 End*************************************/
+
     }
 
 
@@ -310,19 +258,6 @@ public class AssetBundleManager
                 return "windows";
         }
         return "";
-    }
-
-    [MenuItem("BRC/生成AssetBunlde名字")]
-    public static void CreateAssetBundleName()
-    {
-        //太坑了 AssetImporter是基于Assets的上层目录的 这样写不正确
-        //string url = Application.streamingAssetsPath + @"/Notice/11";
-
-        //AssetImporter importer = AssetImporter.GetAtPath("Assets/Res");
-        AssetImporter importer = AssetImporter.GetAtPath("Assets/Res/BRC/Building/SpritePack");
-        importer.assetBundleName = "测试生成AssetBunlde名字/1245/dfgfd";
-        importer.assetBundleVariant = "测试生成AssetBundle变量";
-        AssetDatabase.Refresh(); //刷新编辑器 
     }
 
     /// <summary>

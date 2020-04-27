@@ -2,11 +2,10 @@ public class R
 {
 	public class Prefab
 	{
-		public const int CAPSULE=0;
-		public const int AAA_CUBE=1;
-		public const int AAA_IMAGE=2;
+		public const int AAA_CUBE=0;
+		public const int AAA_IMAGE=1;
 
-		public static string[] path = {"BRC/Building/Prefab/Capsule","BRC/Building/Prefab/AAA/Cube","BRC/Building/Prefab/AAA/Image",};
+		public static string[] path = {"BRC/Building/Prefab/AAA/Cube","BRC/Building/Prefab/AAA/Image",};
 	}
 	public class SpritePack
 	{
@@ -84,7 +83,11 @@ public class R
 	}
 	public class Texture
 	{
-		public static string[] path = {};
+		public const int TUPIAN_ALI=0;
+		public const int TUPIAN_PSB=1;
+		public const int TUPIAN_PSB2=2;
+
+		public static string[] path = {"BRC/Building/Texture/Tupian/ali","BRC/Building/Texture/Tupian/psb","BRC/Building/Texture/Tupian/psb2",};
 	}
 	public class AudioClip
 	{

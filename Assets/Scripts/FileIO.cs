@@ -21,7 +21,7 @@ public class FileIO
     /// <summary>
     /// 是不是在编辑器模式下，在编辑器模式下读取Resources文件夹下文件
     /// </summary>
-    public static bool isEditor = false;
+    public static bool isEditor = true;
 
 
     private static AssetBundleManifest assetBundleManifest;
@@ -35,6 +35,11 @@ public class FileIO
     /// </summary>
     private static Dictionary<string, Sprite> map_sprite = new Dictionary<string, Sprite>();
 
+    private static Dictionary<string, Texture2D> map_texture2D = new Dictionary<string, Texture2D>();
+
+    /// <summary>
+    /// ab包缓存
+    /// </summary>
     private static Dictionary<string, GameObject> map_obj = new Dictionary<string, GameObject>();
 
     /// <summary>
@@ -119,7 +124,8 @@ public class FileIO
                 map_obj.Remove(prefabName);
             }
         }
-        AssetBundle ab = LoadAssetBundle(prefabName);
+       
+        AssetBundle ab = LoadAssetBundle(prefabName.Substring(0, prefabName.LastIndexOf('/')));
         if (ab == null)
         {
             Debug.LogError("加载ab包为空");
@@ -136,6 +142,51 @@ public class FileIO
         return obj;
     }
 
+    public static Texture2D LoadTexture2D(int textureIndex)
+    {
+        string textureName = R.Texture.path[textureIndex];
+        Texture2D texture2D = LoadTexture2D(textureName);
+        if (texture2D == null)
+        {
+            Debug.LogError("加载Texture2D为空");
+        }
+        return texture2D;
+    }
+
+    public static Texture2D LoadTexture2D(string textureName)
+    {
+        if (isEditor)
+        {
+            return Resources.Load<Texture2D>(textureName);
+        }
+        if (map_texture2D.ContainsKey(textureName))
+        {
+            if (map_texture2D[textureName] != null)
+            {
+                return map_texture2D[textureName];
+            }
+            else
+                map_texture2D.Remove(textureName);
+        }
+
+        AssetBundle ab = LoadAssetBundle(textureName.Substring(0, textureName.LastIndexOf('/')));
+        if (ab == null)
+        {
+            Debug.LogError("加载Texture2D时 加载ab为空");
+            return null;
+        }
+        string[] urls = textureName.Split('/');
+        Texture2D texture2D = ab.LoadAsset<Texture2D>(urls[urls.Length - 1]);
+        if (texture2D == null)
+        {
+            Debug.LogError("加载Texture2D为空");
+            return null;
+        }
+
+        map_texture2D.Add(textureName, texture2D);
+        return texture2D;
+    }
+
     public static AssetBundle LoadAssetBundle(string abName)
     {
         if (map_ab.ContainsKey(abName))
@@ -149,31 +200,13 @@ public class FileIO
         AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
         //加载 Prefab+文件夹+预制体格式的ab包文件
         string abUrl = Application.streamingAssetsPath + platform_path + abName.ToLower();
-        AssetBundle ab;
-        try
+        AssetBundle ab= AssetBundle.LoadFromFile(abUrl);
+
+        if (ab != null)
         {
-            ab = AssetBundle.LoadFromFile(abUrl);
-            if (ab != null)
-            {
-                map_ab.Add(abName, ab);
-                return ab;
-            }
+            map_ab.Add(abName, ab);
+            return ab;
         }
-        catch (System.Exception)
-        {
-            //加载 Prefab+预制体格式的ab包文件
-            abUrl = abUrl.Substring(0, abUrl.LastIndexOf('/'));
-            ab = AssetBundle.LoadFromFile(abUrl);
-            if (ab != null)
-            {
-                map_ab.Add(abName, ab);
-                return ab;
-            }
-            throw;
-        }
-
-
-
         Debug.LogError("加载Ab包为空");
         return null;
     }
