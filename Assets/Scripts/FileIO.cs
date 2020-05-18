@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using ICSharpCode.SharpZipLib.Zip;
 using System;
+using System.Security.Cryptography;
 
 public class FileIO
 {
@@ -391,6 +392,40 @@ public class FileIO
         File.WriteAllText(url, str);
     }
 
+    public static void WriteFileTextAppend(string url, string str)
+    {
+        File.AppendAllText(url, str);
+    }
+    /// <summary>
+    /// 获取一个文件的Md5码
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public static string GetFileMd5(string filePath)
+    {
+        try
+        {
+            FileStream fs = new FileStream(filePath, FileMode.Open);
+            int len = (int)fs.Length;
+            byte[] data = new byte[len];
+            fs.Read(data, 0, len);
+            fs.Close();
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] result = md5.ComputeHash(data);
+            string fileMD5 = "";
+            foreach (byte b in result)
+            {
+                fileMD5 = Convert.ToString(b, 16);
+            }
+            return fileMD5;
+        }
+        catch (FileNotFoundException e)
+        {
+            Debug.LogError("获取md5码错误filePath：" + filePath);
+            Debug.LogError(e.Message);
+            return "";
+        }
+    }
 
     /// <summary>
     /// 下载文件

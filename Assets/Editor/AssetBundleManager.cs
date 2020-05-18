@@ -29,7 +29,7 @@ public class AssetBundleManager
     private static StringBuilder[] stringBuilder_index = new StringBuilder[BundleType.Length];
     private static StringBuilder[] stringBuilder_url = new StringBuilder[BundleType.Length];
     private static Dictionary<string, Dictionary<string, string>> sb_allName = new Dictionary<string, Dictionary<string, string>>();
-
+    private static StringBuilder resMd5StringBuilder = new StringBuilder();
 
     [MenuItem("BRC/生成索引并打包")]
     public static void CreateAssetBundle()
@@ -60,7 +60,8 @@ public class AssetBundleManager
             BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
         }
         WriteIndex();
-        //AssetDatabase.Refresh(); //刷新编辑器
+        CreateAssetMD5();//给资源生成MD5码
+        AssetDatabase.Refresh(); //刷新编辑器
     }
     /// <summary>
     /// 打索引
@@ -279,6 +280,56 @@ public class AssetBundleManager
             AssetDatabase.RemoveAssetBundleName(assetBundleName, true);
         }
         //AssetDatabase.Refresh(); //刷新编辑器 
+    }
+    /// <summary>
+    /// 给资源生成md5码用于资源比对更新
+    /// </summary>
+    [MenuItem("BRC/生成md5")]
+    public static void CreateAssetMD5()
+    {
+        dataPath = Application.dataPath;
+        FileIO.CreateNoAreFile(dataPath + @"/Gen", "ResMd5.txt");
+        streamingAssetsPath = Application.streamingAssetsPath;
+        resMd5StringBuilder.Remove(0, resMd5StringBuilder.Length);
+        CreateAssetMD5(streamingAssetsPath);
+
+        FileIO.WriteFileText(dataPath + @"/Gen/ResMd5.txt", resMd5StringBuilder.ToString());
+        AssetDatabase.Refresh(); //刷新编辑器
+    }
+
+
+    private static void CreateAssetMD5(string url)
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(url);
+        FileInfo[] fileInfos= directoryInfo.GetFiles();
+        DirectoryInfo[] directoryInfos= directoryInfo.GetDirectories();
+        
+
+        if (fileInfos != null && fileInfos.Length > 0)
+        {
+            foreach (FileInfo fileInfo in fileInfos)
+            {
+                if (!fileInfo.Name.EndsWith(".meta"))
+                {
+                    resMd5StringBuilder.Append(FileIO.GetFileMd5(url + "/" + fileInfo.Name));
+                    resMd5StringBuilder.Append("|");
+                    resMd5StringBuilder.Append(url + @"/" + fileInfo.Name);
+                    resMd5StringBuilder.Append("\n");
+                }
+            }
+        }
+
+        if (directoryInfos != null && directoryInfos.Length > 0)
+        {
+            foreach (DirectoryInfo item in directoryInfos)
+            {
+                if (item != null)
+                {
+                    CreateAssetMD5(url + "/" + item.Name);
+                }
+            }      
+        }
+        return;
     }
 
     [MenuItem("BRC/测试程序")]

@@ -9,6 +9,7 @@ public class Test : MonoBehaviour
     void Start()
     {
         image.sprite = FileIO.LoadSprite(R.SpritePack.BUILD_BUBINGYING);
+        Debug.LogError(FileIO.GetFileMd5(Application.streamingAssetsPath+ "/windows/windows.manifest"));
 
     }
 
