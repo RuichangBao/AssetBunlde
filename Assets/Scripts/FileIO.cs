@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
+using ICSharpCode.SharpZipLib.Zip;
+using System;
 
 public class FileIO
 {
@@ -100,9 +100,9 @@ public class FileIO
             }
             Texture2D text = ab.LoadAsset<Texture2D>(urls[urls.Length - 1]);
             sprite = Sprite.Create(text, new Rect(0.0f, 0.0f, text.width, text.height), new Vector2(0.5f, 0.5f), 100.0f);
-            map_sprite.Add(spriteName,sprite);
+            map_sprite.Add(spriteName, sprite);
         }
-        
+
         return sprite;
     }
 
@@ -137,7 +137,7 @@ public class FileIO
         }
 
         string abName = prefabName.Substring(0, prefabName.LastIndexOf('/'));
-       
+
         AssetBundle ab = LoadAssetBundle(abName);
         LoadDependencies(abName);
         if (ab == null)
@@ -146,7 +146,7 @@ public class FileIO
             return null;
         }
         string[] urls = prefabName.Split('/');
-        GameObject obj = ab.LoadAsset<GameObject>(urls[urls.Length-1]);
+        GameObject obj = ab.LoadAsset<GameObject>(urls[urls.Length - 1]);
         if (obj == null)
         {
             Debug.LogError("加载出的预制体为空");
@@ -281,18 +281,18 @@ public class FileIO
 
         string[] urls = audioClipName.Split('/');
         Debug.LogError(urls[urls.Length - 1]);
-        AudioClip audioClip = ab.LoadAsset<AudioClip>(urls[urls.Length-1]);
+        AudioClip audioClip = ab.LoadAsset<AudioClip>(urls[urls.Length - 1]);
         if (audioClip == null)
         {
             Debug.LogError("加载音频为空");
             return null;
         }
 
-        map_audioClip.Add(audioClipName,audioClip);
+        map_audioClip.Add(audioClipName, audioClip);
         return audioClip;
     }
 
-    private static AssetBundle LoadAssetBundle(string abName)
+    public static AssetBundle LoadAssetBundle(string abName)
     {
         if (map_ab.ContainsKey(abName))
         {
@@ -305,7 +305,7 @@ public class FileIO
         //AssetBundleManifest assetBundleManifest = LoadAssetBundleManifest();
         //加载 Prefab+文件夹+预制体格式的ab包文件
         string abUrl = Application.streamingAssetsPath + platform_path + abName.ToLower();
-        AssetBundle ab= AssetBundle.LoadFromFile(abUrl);
+        AssetBundle ab = AssetBundle.LoadFromFile(abUrl);
 
         if (ab != null)
         {
@@ -320,8 +320,8 @@ public class FileIO
     {
         if (assetBundleManifest == null)
         {
-            string path = Application.streamingAssetsPath+ platform_path+ platform;
-            
+            string path = Application.streamingAssetsPath + platform_path + platform;
+
             AssetBundle manifestBundle = AssetBundle.LoadFromFile(path);
             assetBundleManifest = manifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
             manifestBundle.Unload(false);
@@ -338,7 +338,7 @@ public class FileIO
         string[] dependencies = assetBundleManifest.GetAllDependencies(abName);
         if (dependencies == null || dependencies.Length <= 0)
             return;
-        Debug.LogError("加载依赖abName:"+abName);
+        Debug.LogError("加载依赖abName:" + abName);
         foreach (string item in dependencies)
         {
             LoadAssetBundle(item);
@@ -389,5 +389,31 @@ public class FileIO
     public static void WriteFileText(string url, string str)
     {
         File.WriteAllText(url, str);
+    }
+
+
+    /// <summary>
+    /// 下载文件
+    /// </summary>
+    /// <param name="url"> 下载文件地址</param>
+    /// <param name="savePath">保存文件地址名字</param>
+    /// <returns></returns>
+    public static IEnumerator DownFile(string url, string savePath)
+    {
+        FileInfo file = new FileInfo(savePath);
+        UnityEngine.Debug.LogError("Start:" + Time.realtimeSinceStartup);
+        WWW www = new WWW(url);
+        yield return www;
+        if (www.isDone)//下载完成保存文件
+        {
+            byte[] bytes = www.bytes;
+            FileStream fs = new FileStream(savePath, FileMode.Append);
+            BinaryWriter bw = new BinaryWriter(fs);
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Flush();     //流会缓冲，此行代码指示流不要缓冲数据，立即写入到文件。
+            fs.Close();     //关闭流并释放所有资源，同时将缓冲区的没有写入的数据，写入然后再关闭。
+            fs.Dispose();   //释放流
+            www.Dispose();
+        }
     }
 }
