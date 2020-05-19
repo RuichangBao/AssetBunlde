@@ -5,6 +5,7 @@ using UnityEngine;
 using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Security.Cryptography;
+using System.Text;
 
 public class FileIO
 {
@@ -389,7 +390,7 @@ public class FileIO
 
     public static void WriteFileText(string url, string str)
     {
-        File.WriteAllText(url, str);
+        File.WriteAllText(url, str, Encoding.UTF8);
     }
 
     public static void WriteFileTextAppend(string url, string str)
@@ -450,5 +451,23 @@ public class FileIO
             fs.Dispose();   //释放流
             www.Dispose();
         }
+    }
+    /// <summary>
+    /// 获取服务器资源Md5码
+    /// </summary>
+    /// <param name="url"></param>
+    public static Dictionary<string, string> GetResMd5ByNetwork(string url)
+    {
+        Debug.LogError(url);
+        StreamReader sr = new StreamReader(url, Encoding.Default);
+        Dictionary<string, string> map_resMd5Network = new Dictionary<string, string>();
+
+        String line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            Debug.LogError(line.ToString());
+            Console.WriteLine(line.ToString());
+        }
+        return map_resMd5Network;
     }
 }

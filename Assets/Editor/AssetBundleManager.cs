@@ -291,7 +291,7 @@ public class AssetBundleManager
         FileIO.CreateNoAreFile(dataPath + @"/Gen", "ResMd5.txt");
         streamingAssetsPath = Application.streamingAssetsPath;
         resMd5StringBuilder.Remove(0, resMd5StringBuilder.Length);
-        CreateAssetMD5(streamingAssetsPath);
+        CreateAssetMD5("");
 
         FileIO.WriteFileText(dataPath + @"/Gen/ResMd5.txt", resMd5StringBuilder.ToString());
         AssetDatabase.Refresh(); //刷新编辑器
@@ -300,10 +300,13 @@ public class AssetBundleManager
 
     private static void CreateAssetMD5(string url)
     {
-        DirectoryInfo directoryInfo = new DirectoryInfo(url);
-        FileInfo[] fileInfos= directoryInfo.GetFiles();
-        DirectoryInfo[] directoryInfos= directoryInfo.GetDirectories();
-        
+        string fileUrl = streamingAssetsPath;
+        if(!string.IsNullOrEmpty(url))
+            fileUrl=fileUrl + "/" + url;
+        DirectoryInfo directoryInfo = new DirectoryInfo(fileUrl);
+        FileInfo[] fileInfos = directoryInfo.GetFiles();
+        DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
+
 
         if (fileInfos != null && fileInfos.Length > 0)
         {
@@ -311,23 +314,37 @@ public class AssetBundleManager
             {
                 if (!fileInfo.Name.EndsWith(".meta"))
                 {
-                    resMd5StringBuilder.Append(FileIO.GetFileMd5(url + "/" + fileInfo.Name));
+                    string md5 = FileIO.GetFileMd5(fileUrl + "/" + fileInfo.Name);
+                    if (md5.Length <= 0)
+                    {
+                        Debug.LogError("获取文件md5码错误");
+                        continue;
+                    }
+                    resMd5StringBuilder.Append(md5);
                     resMd5StringBuilder.Append("|");
+                    //if (string.IsNullOrEmpty(url))//第一次进来
+                    //    resMd5StringBuilder.Append(fileInfo.Name);
+                    //else
                     resMd5StringBuilder.Append(url + @"/" + fileInfo.Name);
-                    resMd5StringBuilder.Append("\n");
+                    resMd5StringBuilder.Append("\r\n");
                 }
             }
         }
-
+        
         if (directoryInfos != null && directoryInfos.Length > 0)
         {
             foreach (DirectoryInfo item in directoryInfos)
             {
                 if (item != null)
                 {
-                    CreateAssetMD5(url + "/" + item.Name);
+                    if (string.IsNullOrEmpty(url))//第一次进来
+                    {
+                        CreateAssetMD5(item.Name);
+                    }
+                    else
+                        CreateAssetMD5(url + "/" + item.Name);
                 }
-            }      
+            }
         }
         return;
     }

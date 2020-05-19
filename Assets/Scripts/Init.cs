@@ -10,14 +10,14 @@ using UnityEngine.SceneManagement;
 public class Init : MonoBehaviour
 {
     //资源地址
-    string url = @"http://192.168.2.15/Windows.rar";
-    string path;
+    private string url = "http://192.168.2.15/ResMd5.txt";
+    private Dictionary<string, string> map_resMd5Network;
     // Use this for initialization
     void Start()
     {
-        path = Application.streamingAssetsPath + "/Windows";
-        Debug.LogError("path:" + path);
-        FileIO.CreateNoAreFolder(path);
+        //string url = Application.dataPath + @"/Gen/ResMd5.txt";
+        Debug.LogError(url);
+        map_resMd5Network =FileIO.GetResMd5ByNetwork(url);
         //SceneManager.LoadScene("Test");
     }
 }
