@@ -407,25 +407,21 @@ public class FileIO
     {
         try
         {
-            FileStream fs = new FileStream(filePath, FileMode.Open);
-            int len = (int)fs.Length;
-            byte[] data = new byte[len];
-            fs.Read(data, 0, len);
-            fs.Close();
+            FileStream file = new FileStream(filePath, FileMode.Open);
             MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] result = md5.ComputeHash(data);
-            string fileMD5 = "";
-            foreach (byte b in result)
+            byte[] retVal = md5.ComputeHash(file);
+            file.Close();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < retVal.Length; i++)
             {
-                fileMD5 = Convert.ToString(b, 16);
+                sb.Append(retVal[i].ToString("x2"));
             }
-            return fileMD5;
+            return sb.ToString();
         }
-        catch (FileNotFoundException e)
+        catch (Exception ex)
         {
-            Debug.LogError("获取md5码错误filePath：" + filePath);
-            Debug.LogError(e.Message);
-            return "";
+            Debug.LogError("错误信息：" + ex);
+            return null;
         }
     }
 
@@ -478,26 +474,41 @@ public class FileIO
     /// <returns></returns>
     public static List<string> GetTextLocal(string url)
     {
+        Debug.LogError("本地获取文本url:"+url);
         List<string> list_str = new List<string>();
-        string str = null;
+     
         try
         {
             StreamReader streamReader = new StreamReader(url);
-            while ((str = streamReader.ReadLine()) != null)
+            while (!streamReader.EndOfStream)
             {
-                if (String.IsNullOrEmpty(str))
-                {
-                    list_str.Add(str);
-                    Debug.LogError("AAAAAAA"+str);
-                }
+                list_str.Add( streamReader.ReadLine());
             }
             streamReader.Close();
-            return list_str;
+            
         }
         catch (Exception e)
         {
             Debug.LogError("从本地获取脚本错误" + e.Message);
             return list_str;
         }
+        return list_str;
+    }
+    /// <summary>
+    /// 删除一个文件
+    /// </summary>
+    /// <param name="url"></param>
+    public static void DeleteFile(string url)
+    {
+        try
+        {
+            FileInfo fileInfo = new FileInfo(url);
+            fileInfo.Delete();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("删除文件错误"+e.Message);
+        }
+       
     }
 }

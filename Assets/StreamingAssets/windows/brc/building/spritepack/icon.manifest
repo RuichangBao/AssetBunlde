@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 1097281800
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f56978e2f41adb517bf114bd27fbdabc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 460b4f5d62b6facbccf7c01637df8f00
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/BRC/Building/SpritePack/icon/icon_2.png
+- Assets/Resources/BRC/Building/SpritePack/icon/icon_2_2.png
+- Assets/Resources/BRC/Building/SpritePack/icon/icon_noread.png
+- Assets/Resources/BRC/Building/SpritePack/icon/icon_read.png
+Dependencies: []
