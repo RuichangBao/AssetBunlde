@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net;
 
 public class FileIO
 {
@@ -453,21 +454,50 @@ public class FileIO
         }
     }
     /// <summary>
-    /// 获取服务器资源Md5码
+    /// 从服务器获取文本
     /// </summary>
     /// <param name="url"></param>
-    public static Dictionary<string, string> GetResMd5ByNetwork(string url)
+    public static string GetTextByNetwork(string url)
     {
-        Debug.LogError(url);
-        StreamReader sr = new StreamReader(url, Encoding.Default);
-        Dictionary<string, string> map_resMd5Network = new Dictionary<string, string>();
-
-        String line;
-        while ((line = sr.ReadLine()) != null)
+        try
         {
-            Debug.LogError(line.ToString());
-            Console.WriteLine(line.ToString());
+            WebClient client = new WebClient();
+            byte[] buffer = client.DownloadData(url);
+           return Encoding.UTF8.GetString(buffer);
         }
-        return map_resMd5Network;
+        catch(Exception e)
+        {
+            Debug.LogError("从服务器获取脚本错误"+e.Message);
+            return null;
+        }
+    }
+    /// <summary>
+    /// 本地获取文本
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    public static List<string> GetTextLocal(string url)
+    {
+        List<string> list_str = new List<string>();
+        string str = null;
+        try
+        {
+            StreamReader streamReader = new StreamReader(url);
+            while ((str = streamReader.ReadLine()) != null)
+            {
+                if (String.IsNullOrEmpty(str))
+                {
+                    list_str.Add(str);
+                    Debug.LogError("AAAAAAA"+str);
+                }
+            }
+            streamReader.Close();
+            return list_str;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("从本地获取脚本错误" + e.Message);
+            return list_str;
+        }
     }
 }

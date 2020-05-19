@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    public Image image;
-    // Use this for initialization
+    public Image Img;
+    public Texture2D texture;
+    public int a;
+
+
     void Start()
     {
-        image.sprite = FileIO.LoadSprite(R.SpritePack.BUILD_BUBINGYING);
-        Debug.LogError(FileIO.GetFileMd5(Application.streamingAssetsPath+ "/windows/windows.manifest"));
-
+        
     }
 
 }

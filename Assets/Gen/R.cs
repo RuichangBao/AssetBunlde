@@ -1,4 +1,4 @@
-public class R
+﻿public class R
 {
 	public class Prefab
 	{
