@@ -16,15 +16,12 @@ public class Init : MonoBehaviour
         Dictionary<string, string> map_resMd5Network = new Dictionary<string, string>();
         //本地资源md5码
         Dictionary<string, string> map_resMd5 = new Dictionary<string, string>();
-        //需要下载的资源
-        List<string> listNeedDownload = new List<string>();
-        //需要删除的资源
-        List<string> listNeedDelete = new List<string>();
+
         //服务器所有md5码路径
-        string url = "http://192.168.2.15/ResMd5.txt";
-       
+        string md5Url = "http://192.168.2.15/ResMd5.txt";
+        string resUrl = "http://192.168.2.15";
         //远程MD5码
-        string netWorkRes = FileIO.GetTextByNetwork(url);
+        string netWorkRes = FileIO.GetTextByNetwork(md5Url);
         string[] netWorkMd5s = netWorkRes.Split('\n');
         foreach (string str in netWorkMd5s)
         {
@@ -73,21 +70,24 @@ public class Init : MonoBehaviour
             map_resMd5.Add(netWorkMd5[0], netWorkMd5[1]);
         }
 
-        foreach (string item in map_resMd5Network.Keys)
-        {
-            if (!map_resMd5.ContainsKey(item))
-            {
-                listNeedDownload.Add(map_resMd5Network[item]);
-            }
-        }
 
         foreach (string item in map_resMd5.Values)
         {
             if (!map_resMd5Network.ContainsValue(item))
-            {
-                FileIO.DeleteFile(Application.streamingAssetsPath+"/"+ map_resMd5[item]);
+            {   //删除不需要的资源
+                FileIO.DeleteFile(Application.streamingAssetsPath + "/" + item);
             }
         }
+
+        foreach (string item in map_resMd5Network.Keys)
+        {
+            if (!map_resMd5.ContainsKey(item))
+            {
+                StartCoroutine(FileIO.DownFile(resUrl + "/" + map_resMd5Network[item], Application.streamingAssetsPath + "/" + map_resMd5Network[item]));
+            }
+        }
+
+       
 
         //SceneManager.LoadScene("Test");
     }

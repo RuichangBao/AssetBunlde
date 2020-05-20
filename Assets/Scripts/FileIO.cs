@@ -433,22 +433,44 @@ public class FileIO
     /// <returns></returns>
     public static IEnumerator DownFile(string url, string savePath)
     {
-        FileInfo file = new FileInfo(savePath);
-        UnityEngine.Debug.LogError("Start:" + Time.realtimeSinceStartup);
         WWW www = new WWW(url);
         yield return www;
         if (www.isDone)//下载完成保存文件
         {
-            byte[] bytes = www.bytes;
-            FileStream fs = new FileStream(savePath, FileMode.Append);
-            BinaryWriter bw = new BinaryWriter(fs);
-            fs.Write(bytes, 0, bytes.Length);
+            byte[] data = www.bytes;
+            FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate);
+            fs.Write(data, 0, data.Length);
             fs.Flush();     //流会缓冲，此行代码指示流不要缓冲数据，立即写入到文件。
             fs.Close();     //关闭流并释放所有资源，同时将缓冲区的没有写入的数据，写入然后再关闭。
             fs.Dispose();   //释放流
             www.Dispose();
         }
     }
+    /// <summary>
+    /// 同步从服务器下载文件
+    /// </summary>
+    /// <param name="url"></param>
+    /// <param name="savePath"></param>
+    public static void DownFileNow(string url, string savePath)
+    {
+        Debug.LogError(url);
+        try
+        {
+            WebClient client = new WebClient();
+            byte[] data = client.DownloadData(url);
+            FileStream fs = new FileStream(savePath, FileMode.Append);
+            BinaryWriter bw = new BinaryWriter(fs);
+            fs.Write(data, 0, data.Length);
+            fs.Flush();     //流会缓冲，此行代码指示流不要缓冲数据，立即写入到文件。
+            fs.Close();     //关闭流并释放所有资源，同时将缓冲区的没有写入的数据，写入然后再关闭。
+            fs.Dispose();   //释放流        
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("同步从服务器下载文件错误" + e.Message);
+        }
+    }
+
     /// <summary>
     /// 从服务器获取文本
     /// </summary>
@@ -459,11 +481,11 @@ public class FileIO
         {
             WebClient client = new WebClient();
             byte[] buffer = client.DownloadData(url);
-           return Encoding.UTF8.GetString(buffer);
+            return Encoding.UTF8.GetString(buffer);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            Debug.LogError("从服务器获取脚本错误"+e.Message);
+            Debug.LogError("从服务器获取脚本错误" + e.Message);
             return null;
         }
     }
@@ -474,7 +496,6 @@ public class FileIO
     /// <returns></returns>
     public static List<string> GetTextLocal(string url)
     {
-        Debug.LogError("本地获取文本url:"+url);
         List<string> list_str = new List<string>();
      
         try
