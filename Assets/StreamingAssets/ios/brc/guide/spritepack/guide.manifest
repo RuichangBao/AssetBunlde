@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+CRC: 788217883
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d2c41ffd64e844e42c77340fef56858b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 460b4f5d62b6facbccf7c01637df8f00
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/BRC/Guide/SpritePack/Guide/kaituozhe_02.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/shangren_01.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/kaituozhe_01.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/shangren_03.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/kaituozhe_03.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/shangren_05.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/shangren_04.png
+- Assets/Resources/BRC/Guide/SpritePack/Guide/shangren_02.png
+Dependencies: []

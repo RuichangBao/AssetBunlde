@@ -315,7 +315,7 @@ public class FileIO
             map_ab.Add(abName, ab);
             return ab;
         }
-        Debug.LogError("加载Ab包为空");
+        Debug.LogError("加载Ab包为空abName:"+ abName);
         return null;
     }
 
@@ -433,7 +433,12 @@ public class FileIO
     /// <returns></returns>
     public static IEnumerator DownFile(string url, string savePath)
     {
+        string localPath = savePath.Substring(0, savePath.LastIndexOf("/"));
+        FileIO.CreateNoAreFolder(localPath);
+        
         WWW www = new WWW(url);
+        Debug.LogError("下载文件url："+url);
+        Debug.LogError("保存路径：111"+savePath+"111");
         yield return www;
         if (www.isDone)//下载完成保存文件
         {
@@ -446,6 +451,23 @@ public class FileIO
             www.Dispose();
         }
     }
+
+    public static void WWWGet(string url, string savePath)
+    {
+        WWW www = new WWW(url);
+        while (!www.isDone)
+        {
+        }
+        string localPath = savePath.Substring(0, savePath.LastIndexOf("/"));
+        FileIO.CreateNoAreFolder(localPath);
+        FileStream fs = new FileStream(savePath, FileMode.OpenOrCreate);
+        fs.Write(www.bytes, 0, www.bytes.Length);
+
+        fs.Close();
+        fs.Dispose();//文件流释放  
+        www.Dispose();
+    }
+
     /// <summary>
     /// 同步从服务器下载文件
     /// </summary>

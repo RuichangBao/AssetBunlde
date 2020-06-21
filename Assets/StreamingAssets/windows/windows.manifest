@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 3326437570
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: brc/building/audioclip/testaudioclip
+      Dependencies: {}
+    Info_1:
+      Name: brc/building/materials/testmaterials
+      Dependencies:
+        Dependency_0: brc/building/texture/tupian
+    Info_2:
+      Name: brc/building/prefab/aaa
+      Dependencies:
+        Dependency_0: brc/building/materials/testmaterials
+    Info_3:
+      Name: brc/building/spritepack/build
+      Dependencies: {}
+    Info_4:
+      Name: brc/building/spritepack/icon
+      Dependencies: {}
+    Info_5:
+      Name: brc/building/texture/tupian
+      Dependencies: {}
+    Info_6:
+      Name: brc/guide/spritepack/guide
+      Dependencies: {}
+    Info_7:
+      Name: brc/helper/spritepack/helper
+      Dependencies: {}
+    Info_8:
+      Name: brc/helper/spritepack/zuanshi
+      Dependencies: {}

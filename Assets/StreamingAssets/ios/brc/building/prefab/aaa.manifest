@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 662349467
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2cbc0292337fef64c42056d1ab715a26
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6232fc6b56b4d27faa415adad1eecd6a
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/BRC/Building/Prefab/AAA/Cube.prefab
+- Assets/Resources/BRC/Building/Prefab/AAA/Image.prefab
+Dependencies:
+- E:/Users/12948/Documents/AssetBunlde/Assets/StreamingAssets/ios/brc/building/materials/testmaterials

@@ -12,7 +12,6 @@ public class AssetBundleManager
     private static string dataPath;
     private static string streamingAssetsPath;
     public static string pathURL = Application.streamingAssetsPath + "/";
-    public static string editorUrl;
  
 
     /// <summary>
@@ -52,12 +51,19 @@ public class AssetBundleManager
         {
             ReadFolder(directoryInfo.Name);
         }
-       
-        if(!FileIO.isEditor)
+
+        if (!FileIO.isEditor)
         {
-            string outputPath = Path.Combine(pathURL, GetPlatformFolder());
+            string outputPath = Application.streamingAssetsPath + "/" + GetPlatformFolder();
             FileIO.CreateNoAreFolder(outputPath);
-            BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            if (GetPlatformFolder() == "android")
+            {
+                BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            }
+            else
+            {
+                BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            }
         }
         WriteIndex();
         CreateAssetMD5();//给资源生成MD5码
@@ -322,9 +328,6 @@ public class AssetBundleManager
                     }
                     resMd5StringBuilder.Append(md5);
                     resMd5StringBuilder.Append("|");
-                    //if (string.IsNullOrEmpty(url))//第一次进来
-                    //    resMd5StringBuilder.Append(fileInfo.Name);
-                    //else
                     resMd5StringBuilder.Append(url + @"/" + fileInfo.Name);
                     resMd5StringBuilder.Append("\r\n");
                 }
@@ -352,13 +355,8 @@ public class AssetBundleManager
     [MenuItem("BRC/测试程序")]
     public static void Test44()
     {
-        int[] nums = new int[] { 1, 2, 3, 4, 5, 6 };
-
-        Debug.LogError(Array.IndexOf(nums,1));
-        Debug.LogError(Array.IndexOf(nums, 100));
-        string str = "dafsdaf.dasfadsf.dsafsafasdf";
-        Debug.LogError(str.IndexOf('.'));
-        Debug.LogError(str.LastIndexOf('.'));
+        string outputPath =Application.streamingAssetsPath+"/"+GetPlatformFolder();
+        Debug.LogError(outputPath);
         //FileIO.CreateNoAreFolder(RScriptsUrl);
 
         /*string str = GetPlatformFolder();

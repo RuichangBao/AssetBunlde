@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+CRC: 4170615229
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 8027bef57a56cac7326705a7e16387bf
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 460b4f5d62b6facbccf7c01637df8f00
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon6.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon2.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon5.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon1.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon4.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon3.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon7.png
+- Assets/Resources/BRC/Helper/SpritePack/ZuanShi/ZuanShiIcon8.png
+Dependencies: []
