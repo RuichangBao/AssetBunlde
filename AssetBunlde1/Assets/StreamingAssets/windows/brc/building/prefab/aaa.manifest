@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1389431744
+CRC: 2943087061
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 50e9c9738bc1364fd7bfe71c572032fd
+    Hash: de239a9b0a9d66a8c366bd6974e975ae
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6232fc6b56b4d27faa415adad1eecd6a
+    Hash: dad3757d1fef386b6fad89b9f6d023cc
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -35,4 +35,4 @@ Assets:
 - Assets/Resources/BRC/Building/Prefab/AAA/Cube.prefab
 - Assets/Resources/BRC/Building/Prefab/AAA/Image.prefab
 Dependencies:
-- E:/Users/12948/Documents/AssetBunlde/Assets/StreamingAssets/windows/brc/building/materials/testmaterials
+- E:/Users/12948/Documents/AssetBunlde/AssetBunlde1/Assets/StreamingAssets/windows/brc/building/materials/testmaterials
