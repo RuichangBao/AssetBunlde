@@ -31,3 +31,5 @@ public class BuildAssetBundle : EditorWindow
         Debug.LogError("生成AssetBundle名字");
     }
 }
+fdsfsdaf
+    测试提交
