@@ -4,14 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class EditorScript : MonoBehaviour
+public class EditorScript
 {
-    // Start is called before the first frame update
-    private static void Start()
-    {
-
-    }
-
     [MenuItem("配置文件/生成GameSetting")]
     private static void BuildSetting()
     {
