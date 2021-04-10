@@ -31,5 +31,5 @@ public class BuildAssetBundle : EditorWindow
         Debug.LogError("生成AssetBundle名字");
     }
 }
-fdsfsdaf
+fds的说法范德萨范德萨
     测试提交
