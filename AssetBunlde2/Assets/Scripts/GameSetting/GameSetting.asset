@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06bddde9011504d4392aea0d0b4f3d21, type: 3}
   m_Name: GameSetting
   m_EditorClassIdentifier: 
-  a: 1
-  b: 1
+  a: 0
+  b: 0

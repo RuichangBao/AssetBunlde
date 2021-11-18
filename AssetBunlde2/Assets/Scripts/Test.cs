@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject obj;
     void Start()
     {
-        GameSetting gameSetting = AssetDatabase.LoadAssetAtPath<GameSetting>("Assets/Scripts/GameSetting/GameSetting.asset");
-        Debug.LogError(gameSetting.a);
-        gameSetting.a = 1000;
-        AssetDatabase.SaveAssets();
+        string str = obj.GetComponent<MeshRenderer>().name;
+        Debug.LogError(str);
+        str = obj.GetComponent<MeshFilter>().name;
+        Debug.LogError(str);
     }
 
     // Update is called once per frame
