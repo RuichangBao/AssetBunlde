@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class EditorScript
+public class EditorScript : EditorWindow
 {
     [MenuItem("配置文件/生成GameSetting")]
     private static void BuildSetting()
@@ -15,5 +15,12 @@ public class EditorScript
 
         AssetDatabase.CreateAsset(gameSetting, pathName);
         AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("AssetBundle/打包")]
+    private static void AssetBundle()
+    {
+        BuildAssetBundle window = (BuildAssetBundle)GetWindow(typeof(BuildAssetBundle));
+        window.Show();
     }
 }
