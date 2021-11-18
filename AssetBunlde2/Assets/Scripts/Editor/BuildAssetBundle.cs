@@ -11,20 +11,12 @@ public class BuildAssetBundle : EditorWindow
     {
         if (GUILayout.Button("打包AssundleBundle", GUILayout.Width(200)))
         {
-            //BuildPipeline.BuildAssetBundles(Application.streamingAssetsPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-            //return;
             listAssetBundleBuild.Clear();
             this.CreateAssetBundle("Assets/Resources");
+
+            AssetBundleBuild[] assetBundleBuilds = listAssetBundleBuild.ToArray();
+            BuildPipeline.BuildAssetBundles(Application.streamingAssetsPath, assetBundleBuilds, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
             Debug.LogError("打包结束");
-            //for (int i = 0; i < listAssetBundleBuild.Count; i++)
-            //{
-            //    Debug.LogError("AAAA"+listAssetBundleBuild[i].assetBundleName);
-            //    for (int j = 0; j < listAssetBundleBuild[i].assetNames.Length; j++)
-            //    {
-            //        Debug.LogError(listAssetBundleBuild[i].assetNames[j]);
-            //    }
-            //} 
-            BuildPipeline.BuildAssetBundles(Application.streamingAssetsPath, listAssetBundleBuild.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
         }
     }
     /// <summary>
@@ -33,32 +25,77 @@ public class BuildAssetBundle : EditorWindow
     private void CreateAssetBundle(string path)
     {
         string[] guids = AssetDatabase.FindAssets("", new string[] { path });
-        List<string> filePath = new List<string>();
+        List<string> listFilePath = new List<string>();
         for (int i = 0; i < guids.Length; i++)
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
-            if (AssetDatabase.IsValidFolder(assetPath))
+
+            if (!AssetDatabase.IsValidFolder(assetPath))
             {
-                CreateAssetBundle(assetPath);
+                listFilePath.Add(assetPath);
+            }
+        }
+        listFilePath = CopyListString(listFilePath);
+        if (listFilePath.Count <= 0)
+            return;
+        Dictionary<string, List<string>> dictBundleBuild = new Dictionary<string, List<string>>();
+        for (int i = 0; i < listFilePath.Count; i++)
+        {
+            int lastIndex = listFilePath[i].LastIndexOf('/');
+            string buildPath = listFilePath[i].Substring(0, lastIndex);
+            if (dictBundleBuild.ContainsKey(buildPath))
+            {
+                dictBundleBuild[buildPath].Add(listFilePath[i]);
             }
             else
             {
-                filePath.Add(assetPath);
+                dictBundleBuild[buildPath] = new List<string>() { listFilePath[i] };
             }
         }
-        if (filePath.Count <= 0)
-            return;
-        AssetBundleBuild assetBundleBuild = CreateAssetBundleBuild(path, filePath.ToArray());
-        listAssetBundleBuild.Add(assetBundleBuild);
+        foreach (string buildPath in dictBundleBuild.Keys)
+        {
+            AssetBundleBuild assetBundleBuild = CreateAssetBundleBuild(buildPath, dictBundleBuild[buildPath].ToArray());
+            listAssetBundleBuild.Add(assetBundleBuild);
+            if (!AssetDatabase.IsValidFolder(buildPath))
+            {
+                Debug.LogError("创建文件夹：  "+ buildPath);
+                AssetDatabase.CreateFolder("",buildPath);
+            }
+        }
     }
-    int index = 0;
+
+
+    private List<string> CopyListString(List<string> list1)
+    {
+        List<string> list2 = new List<string>();
+        for (int i = 0; i < list1.Count; i++)
+        {
+            string str1 = list1[i];
+            bool have = false;
+            for (int j = 0; j < list2.Count; j++)
+            {
+                if (str1 == list2[j])
+                {
+                    have = true;
+                    break;
+                }
+            }
+            if (!have)
+            {
+                list2.Add(str1);
+            }
+        }
+        return list2;
+    }
+
     private AssetBundleBuild CreateAssetBundleBuild(string buildPath, string[] assetNames)
     {
-        index++;
+        //string hash = FileIO.GetMD5HashFromFile(buildPath);
+        Debug.LogError("buildPath:"+ buildPath);
         AssetBundleBuild assetBundleBuild = new AssetBundleBuild
         {
             assetBundleName = buildPath,
-            assetNames = new string[] { buildPath },
+            assetNames = assetNames,
         };
         return assetBundleBuild;
     }

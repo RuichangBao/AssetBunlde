@@ -23,4 +23,11 @@ public class EditorScript : EditorWindow
         BuildAssetBundle window = (BuildAssetBundle)GetWindow(typeof(BuildAssetBundle));
         window.Show();
     }
+
+    [MenuItem("AssetBundle/测试")]
+    private static void Test()
+    {
+        AssetDatabase.CreateFolder("", "Assets/ss/dff/sss");
+        Debug.LogError("测试内容");
+    }
 }
