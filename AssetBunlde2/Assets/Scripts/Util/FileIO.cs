@@ -1,14 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
+﻿using System.IO;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net;
+
 
 public class FileIO
 {
+    public static bool Exists(string path)
+    {
+        return File.Exists(path);
+    }
+    public static void CreateDirectory(string path)
+    {
+        if (Directory.Exists(path))
+            return;
+        Directory.CreateDirectory(path);
+    }
+    public static void Delete(string path, bool recursive = false)
+    {
+        if (Exists(path))
+            File.Delete(path);
+        if(Directory.Exists(path))
+            Directory.Delete(path, recursive);
+    }
     public static string GetMD5HashFromFile(string fileName)
     {
         try
