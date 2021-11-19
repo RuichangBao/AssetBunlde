@@ -45,11 +45,14 @@ public class BuildAssetBundle : EditorWindow
             string buildPath = listFilePath[i].Substring(0, lastIndex);
             if (dictBundleBuild.ContainsKey(buildPath))
             {
-                dictBundleBuild[buildPath].Add(listFilePath[i]);
+                List<string> listBundleBuild = dictBundleBuild[buildPath];
+                listBundleBuild.Add(listFilePath[i]);
+                //dictBundleBuild[buildPath].Add(listFilePath[i]);
             }
             else
             {
-                dictBundleBuild[buildPath] = new List<string>() { listFilePath[i] };
+                List<string> listBundleBuild = new List<string>() { listFilePath[i] };
+                dictBundleBuild.Add(buildPath, listBundleBuild);
             }
         }
         foreach (string buildPath in dictBundleBuild.Keys)
