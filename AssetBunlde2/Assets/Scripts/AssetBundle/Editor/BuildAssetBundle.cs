@@ -21,7 +21,7 @@ public class BuildAssetBundle : EditorWindow
             SaveAssetBundleConf();
             Debug.LogError("打包结束");
             AssetDatabase.Refresh();
-            return;
+            //return;
         }
         if (GUILayout.Button("清理所有AB", GUILayout.Width(200)))
         {
