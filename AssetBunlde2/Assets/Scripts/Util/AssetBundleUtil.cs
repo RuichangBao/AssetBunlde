@@ -70,7 +70,7 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
         }
         return null;
     }
-    private string GetAssetBundlePath(string assetBundleName)
+    public string GetAssetBundlePath(string assetBundleName)
     {
         return AssetBundleData.outPutPath + "/" + assetBundleName;
     }
