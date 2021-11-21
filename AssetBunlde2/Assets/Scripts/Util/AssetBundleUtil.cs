@@ -23,12 +23,8 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
             return dictPerfab[name];
         string assetBundleName = GetAssetBundleName(name);
         AssetBundle assetBundle = LoadAssetBundle(assetBundleName);
-        Debug.LogError(assetBundle.name);
-        for(int i=0; i<assetBundle.AllAssetNames().Length;i++)
-        {
-            Debug.LogError(assetBundle.AllAssetNames()[i]);
-        }
         GameObject obj = assetBundle.LoadAsset<GameObject>(name);
+        dictPerfab.Add(name,obj);
         return obj;
     }
     private AssetBundle LoadAssetBundle(string assetBundleName)
