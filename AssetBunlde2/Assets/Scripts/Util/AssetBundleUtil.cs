@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using UnityEditor;
 using UnityEngine;
 
 public class AssetBundleUtil : Single<AssetBundleUtil>
@@ -15,6 +16,7 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
         string streamingAssetsAbPath = Path.Combine(AssetBundleData.outPutPath, "StreamingAssets");
         AssetBundle streamingAssetsAb = AssetBundle.LoadFromFile(streamingAssetsAbPath);
         assetBundleManifest = streamingAssetsAb.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+        streamingAssetsAb.Unload(false);
     }
 
     public GameObject LoadGameObject(string name)
@@ -24,7 +26,10 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
         string assetBundleName = GetAssetBundleName(name);
         AssetBundle assetBundle = LoadAssetBundle(assetBundleName);
         GameObject obj = assetBundle.LoadAsset<GameObject>(name);
-        dictPerfab.Add(name,obj);
+        dictPerfab.Add(name, obj);
+        dictAssetBundle.Remove(assetBundle.name);
+        assetBundle.Unload(false);
+        
         return obj;
     }
     private AssetBundle LoadAssetBundle(string assetBundleName)
@@ -40,7 +45,7 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
         {
             assetBundle = dictAssetBundle[assetBundleName];
         }
-        
+
         string[] allDependencies = assetBundleManifest.GetAllDependencies(assetBundleName);
         for (int i = 0; i < allDependencies.Length; i++)
         {
@@ -73,5 +78,56 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
     public string GetAssetBundlePath(string assetBundleName)
     {
         return AssetBundleData.outPutPath + "/" + assetBundleName;
+    }
+
+    public void Unload(AssetBundle assetBundle,bool unloadAllLoadedObjects)
+    {
+        assetBundle.Unload(unloadAllLoadedObjects);
+        if(dictAssetBundle.ContainsKey(assetBundle.name))
+        {
+            dictAssetBundle.Remove(assetBundle.name);
+        }
+    }
+
+    /// <summary>
+    /// 获取依赖assetBundle 的所有assetBundle名字
+    /// </summary>
+    public List<string> GetDepend(AssetBundle assetBundle)
+    {
+        ///1:被依赖的ab   
+        Dictionary<string, List<string>> dictDepend = new Dictionary<string, List<string>>();
+        foreach (AssetBundle item in dictAssetBundle.Values)
+        {
+            string[] abNames = assetBundleManifest.GetAllDependencies(item.name);
+            if (abNames != null && abNames.Length > 0)
+            {
+                for (int i = 0; i < abNames.Length; i++)
+                {
+                    string abName = abNames[i];
+                    if (dictDepend.ContainsKey(abName))
+                    {
+                        List<string> listDepend = dictDepend[abName];
+                        if (listDepend.Contains(item.name))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            listDepend.Add(item.name);
+                        }
+                    }
+                    else
+                    {
+                        dictDepend.Add(abName, new List<string>() { item.name });
+                    }
+                }
+                
+            }
+        }
+        if (dictDepend.ContainsKey(assetBundle.name))
+        {
+            return dictDepend[assetBundle.name];
+        }
+        return null;
     }
 }

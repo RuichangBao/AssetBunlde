@@ -84,4 +84,16 @@ public class UITest : MonoBehaviour
     {
 
     }
+    [ContextMenu("设置变量")]
+    public void OnEditorAssignVarible()
+    {
+        btnCreateAb=GameObject.Find("Canvas/btnCreateAb").GetComponent<Button>();
+        btnCreateAss = GameObject.Find("Canvas/btnCreateAss").GetComponent<Button>();
+        btnCreateObj = GameObject.Find("Canvas/btnCreateObj").GetComponent<Button>();
+        btnDeleteAssets1 = GameObject.Find("Canvas/btnDeleteAssets1").GetComponent<Button>();
+        btnDeleteAssets2 = GameObject.Find("Canvas/btnDeleteAssets2").GetComponent<Button>();
+        btnDeleteObj = GameObject.Find("Canvas/btnDeleteObj").GetComponent<Button>();
+        btnUnloadTrue = GameObject.Find("Canvas/btnUnloadTrue").GetComponent<Button>();
+        btnUnloadFalse = GameObject.Find("Canvas/btnUnloadFalse").GetComponent<Button>();
+    }
 }

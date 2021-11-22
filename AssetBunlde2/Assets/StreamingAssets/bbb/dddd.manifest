@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+CRC: 981143742
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 113c91e2da462eaed1f2ddf474c4ac3b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/AssetBundle/BBB/DDDD/fangzhigongfang.png
+- Assets/Resources/AssetBundle/BBB/DDDD/guantouchang.png
+- Assets/Resources/AssetBundle/BBB/DDDD/chuanwu.png
+- Assets/Resources/AssetBundle/BBB/DDDD/caikuangchang.png
+- Assets/Resources/AssetBundle/BBB/DDDD/fengmixiaowu.png
+- Assets/Resources/AssetBundle/BBB/DDDD/mucaichang.png
+- Assets/Resources/AssetBundle/BBB/DDDD/gongbingying.png
+- Assets/Resources/AssetBundle/BBB/DDDD/caimeichang.png
+Dependencies: []

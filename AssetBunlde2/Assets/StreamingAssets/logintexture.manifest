@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 1037500430
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0a745ec11f97388a8a44f9ed5f3b57c8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f19fbf085e00d23fbc8d6cf7b345590b
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/AssetBundle/LoginTexture/psb.jpg
+- Assets/Resources/AssetBundle/LoginTexture/psb2.jpg
+Dependencies: []
