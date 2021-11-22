@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 2574067094
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a4e7c18d27d987402c019e07c8929849
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/AssetBundle/NewFolder/AAA/CCC/qibingying.png
+- Assets/Resources/AssetBundle/NewFolder/AAA/CCC/putaojiuchang.png
+- Assets/Resources/AssetBundle/NewFolder/AAA/CCC/mianbaofang.png
+- Assets/Resources/AssetBundle/NewFolder/AAA/CCC/sanmingzhi.png
+- Assets/Resources/AssetBundle/NewFolder/AAA/CCC/niangjiuwu.png
+Dependencies: []

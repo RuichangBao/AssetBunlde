@@ -1,0 +1,28 @@
+ManifestFileVersion: 0
+CRC: 724786955
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e8d6bffe646e7b7e45c11634f13ec804
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/AssetBundle/BBB/CCc/junliangchang.png
+- Assets/Resources/AssetBundle/BBB/CCc/jiuguan.png
+- Assets/Resources/AssetBundle/BBB/CCc/maitian.png
+- Assets/Resources/AssetBundle/BBB/CCc/manor_icon2_gaojifushi.png
+- Assets/Resources/AssetBundle/BBB/CCc/huotuigongfang.png
+- Assets/Resources/AssetBundle/BBB/CCc/jinshugongfang.png
+- Assets/Resources/AssetBundle/BBB/CCc/guoyuan.png
+- Assets/Resources/AssetBundle/BBB/CCc/jinbichang.png
+- Assets/Resources/AssetBundle/BBB/CCc/manor_icon2_huangjiahuayuan.png
+- Assets/Resources/AssetBundle/BBB/CCc/kejiyanjiusuo.png
+- Assets/Resources/AssetBundle/BBB/CCc/bubingying.png
+Dependencies: []

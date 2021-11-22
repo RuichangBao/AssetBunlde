@@ -17,7 +17,7 @@ public class UITest : MonoBehaviour
     public Button btnDeleteObj;
     public Button btnUnloadTrue;
     public Button btnUnloadFalse;
-    private string abName = "assets/resources/login";
+    private string abName = "login";
     private AssetBundle assetBundle;
     private GameObject obj;
     private List<GameObject> listObj = new List<GameObject>();
@@ -46,7 +46,7 @@ public class UITest : MonoBehaviour
     /// </summary>
     private void Btn2OnClick()
     {
-        obj = assetBundle.LoadAsset<GameObject>("Assets/Resources/Login/Cube.prefab");
+        obj = assetBundle.LoadAsset<GameObject>("Assets/Resources/AssetBundle/Login/Cube.prefab");
 
     }
     /// <summary>

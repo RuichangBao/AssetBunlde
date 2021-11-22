@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+CRC: 3581212884
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1d846944384ad00611c7e609ecd18b62
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea5a42e0fd8ea905efa7aa926a3b8944
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/AssetBundle/NewFolder/BBB/xiudaoyuan.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/manor_icon2_talou.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/shizhengting.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/zhitaochang.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/manor_icon2_shangchuan.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/zhubaogongfang.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/yangshiyangcheng.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/zhuankuaichang.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/zhipichang.png
+- Assets/Resources/AssetBundle/NewFolder/BBB/zhucheng.png
+Dependencies: []
