@@ -121,7 +121,6 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
                         dictDepend.Add(abName, new List<string>() { item.name });
                     }
                 }
-                
             }
         }
         if (dictDepend.ContainsKey(assetBundle.name))
@@ -129,5 +128,15 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
             return dictDepend[assetBundle.name];
         }
         return null;
+    }
+
+    public void Test()
+    {
+        string[]strs = assetBundleManifest.GetDirectDependencies("login");
+        Debug.LogError(strs.Length);
+        for (int i = 0; i < strs.Length; i++)
+        {
+            Debug.LogError(strs[i]);
+        }
     }
 }

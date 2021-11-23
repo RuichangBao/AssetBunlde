@@ -8,12 +8,14 @@ using System.Xml;
 public class BuildAssetBundle : EditorWindow
 {
     private List<AssetBundleBuild> listAssetBundleBuild = new List<AssetBundleBuild>();
+    private AssetBundleManifest assetBundleManifest;
     private void OnGUI()
     {
         if (GUILayout.Button("打包AssundleBundle", GUILayout.Width(200)))
         {
             listAssetBundleBuild.Clear();
-            this.CreateAssetBundle(AssetBundleData.inPutPath);
+            this.CreateAssetBundle(AssetBundleData.inPutPath); 
+           
             FileIO.Delete(AssetBundleData.outPutPath + "/", true);
             FileIO.CreateDirectory(AssetBundleData.outPutPath);
             AssetBundleBuild[] assetBundleBuilds = listAssetBundleBuild.ToArray();
@@ -21,7 +23,7 @@ public class BuildAssetBundle : EditorWindow
             SaveAssetBundleConf();
             Debug.LogError("打包结束");
             AssetDatabase.Refresh();
-            //return;
+            
         }
         if (GUILayout.Button("清理所有AB", GUILayout.Width(200)))
         {
@@ -44,22 +46,6 @@ public class BuildAssetBundle : EditorWindow
             }
         }
     }
-    private string GetNameByPath(string path)
-    {
-        int startIndex = path.LastIndexOf('/');
-
-        if (startIndex > 0)
-        {
-            path = path.Substring(startIndex + 1, path.Length - (startIndex + 1));
-        }
-        int endIndex = path.IndexOf('.');
-        if (endIndex > 0)
-        {
-            path = path.Substring(0, endIndex);
-        }
-        return path;
-    }
-
     /// <summary>
     /// 保存AssetBundleConf文件
     /// </summary>
@@ -84,6 +70,23 @@ public class BuildAssetBundle : EditorWindow
         xmlDocument.DocumentElement.AppendChild(student);
         xmlDocument.Save(AssetBundleData.AssetBundleConf);
     }
+
+    private string GetNameByPath(string path)
+    {
+        int startIndex = path.LastIndexOf('/');
+
+        if (startIndex > 0)
+        {
+            path = path.Substring(startIndex + 1, path.Length - (startIndex + 1));
+        }
+        int endIndex = path.IndexOf('.');
+        if (endIndex > 0)
+        {
+            path = path.Substring(0, endIndex);
+        }
+        return path;
+    }
+
     /// <summary>
     /// 打包AssetBundle
     /// </summary>
@@ -95,14 +98,58 @@ public class BuildAssetBundle : EditorWindow
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
 
-            if (!AssetDatabase.IsValidFolder(assetPath))
+            if (AssetDatabase.IsValidFolder(assetPath))
+            {   //文件夹排除
+                continue;
+            }
+            if (assetPath.EndsWith(".cs"))
+            {   //排除cs脚本
+                continue;
+            }
+            listFilePath.Add(assetPath);
+        }
+
+        //处理依赖 Start
+        //key:被依赖的资源 value所有依赖该资源的资源
+        Dictionary<string, List<string>> dictDependencies = new Dictionary<string, List<string>>();
+        for (int i = 0; i < listFilePath.Count; i++)
+        {
+            string filePath = listFilePath[i];
+            string[] dependencies = AssetDatabase.GetDependencies(filePath);
+            for (int j = 0; j < dependencies.Length; j++)
             {
-                listFilePath.Add(assetPath);
+                string depend = dependencies[j];
+                if (filePath == depend)//排除自己
+                {
+                    continue;
+                }
+                if (dictDependencies.ContainsKey(depend))
+                {
+                    List<string> listDepend = dictDependencies[depend];
+                    if (!listDepend.Contains(filePath))
+                    {
+                        listDepend.Add(filePath);
+                    }
+                }
+                else
+                {
+                    dictDependencies.Add(depend, new List<string>() { listFilePath[i] });
+                }
             }
         }
+        foreach (string item in dictDependencies.Keys)
+        {
+            if (dictDependencies.Count > 1)
+            {
+                listFilePath.Add(item);
+            }
+        }
+        //处理依赖 End
+
         listFilePath = CopyListString(listFilePath);
         if (listFilePath.Count <= 0)
             return;
+       
         Dictionary<string, List<string>> dictBundleBuild = new Dictionary<string, List<string>>();
         for (int i = 0; i < listFilePath.Count; i++)
         {
@@ -120,16 +167,21 @@ public class BuildAssetBundle : EditorWindow
                 dictBundleBuild.Add(buildPath, listBundleBuild);
             }
         }
+        Dictionary<string, AssetBundleBuild> dictAssetBundleBuild = new Dictionary<string, AssetBundleBuild>();
         foreach (string buildPath in dictBundleBuild.Keys)
         {
-            string assetBundleName = buildPath.ToLower().Replace(AssetBundleData.inPutPath.ToLower() + "/", "");
+            string assetBundleName = buildPath;
             AssetBundleBuild assetBundleBuild = CreateAssetBundleBuild(assetBundleName, dictBundleBuild[buildPath].ToArray());
-            listAssetBundleBuild.Add(assetBundleBuild);
+            dictAssetBundleBuild.Add(assetBundleBuild.assetBundleName, assetBundleBuild);
             if (!AssetDatabase.IsValidFolder(buildPath))
             {
-                Debug.LogError("创建文件夹：  " + buildPath);
                 AssetDatabase.CreateFolder("", buildPath);
             }
+        }
+
+        foreach (AssetBundleBuild assetBundleBuild in dictAssetBundleBuild.Values)
+        {
+            listAssetBundleBuild.Add(assetBundleBuild);
         }
     }
 
@@ -165,5 +217,18 @@ public class BuildAssetBundle : EditorWindow
             assetNames = assetNames,
         };
         return assetBundleBuild;
+    }
+
+    private void LoadManifest(string path)
+    {
+        AssetBundleManifest manifest = null;
+        AssetBundle.UnloadAllAssetBundles(true);
+        AssetBundle bundle = AssetBundle.LoadFromFile(path);
+        if (bundle == null)
+        {
+            Debug.LogError("[AssetBundlePatcher:LoadManifest] Load AssetBundleManifest failure");
+            return;
+        }
+        assetBundleManifest = bundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
     }
 }

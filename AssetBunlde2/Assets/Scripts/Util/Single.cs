@@ -7,7 +7,7 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public class Single<T> where T : new()
 {
-    public static T instance;
+    private static T instance;
 
     public static T Instance
     {

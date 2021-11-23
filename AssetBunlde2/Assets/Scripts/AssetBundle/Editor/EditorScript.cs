@@ -27,14 +27,7 @@ public class EditorScript : EditorWindow
     [MenuItem("AssetBundle/测试")]
     private static void Test()
     {
-        GameObject obj = GameObject.Find("Cube");
-        GameObject obj2 = GameObject.Find("Cube1");
-        for (int i = 0; i < 100; i++)
-        {
-            GameObject objw = Instantiate(obj2);
-            objw.transform.SetParent(obj.transform);
-            objw.transform.localPosition = new Vector3(i/100f, i / 100f, i / 100f);
-            objw.name = (i+1).ToString();
-        }
+        AssetBundleUtil.Instance.Test();
+        return;
     }
 }
