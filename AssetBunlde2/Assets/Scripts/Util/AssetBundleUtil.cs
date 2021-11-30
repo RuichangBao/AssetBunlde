@@ -9,6 +9,7 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
 {
     private Dictionary<string, AssetBundle> dictAssetBundle = new Dictionary<string, AssetBundle>();
     private Dictionary<string, GameObject> dictPerfab = new Dictionary<string, GameObject>();
+    private Dictionary<string, Sprite> dictSprite = new Dictionary<string, Sprite>();
     private AssetBundleManifest assetBundleManifest;
     public override void Init()
     {
@@ -27,11 +28,22 @@ public class AssetBundleUtil : Single<AssetBundleUtil>
         AssetBundle assetBundle = LoadAssetBundle(assetBundleName);
         GameObject obj = assetBundle.LoadAsset<GameObject>(name);
         dictPerfab.Add(name, obj);
-        dictAssetBundle.Remove(assetBundle.name);
-        assetBundle.Unload(false);
+
         
         return obj;
     }
+
+    public Sprite LoadSprite(string name)
+    {
+        if (dictSprite.ContainsKey(name))
+            return dictSprite[name];
+        string assetBundleName = GetAssetBundleName(name);
+        AssetBundle assetBundle = LoadAssetBundle(assetBundleName);
+        Sprite sprite = assetBundle.LoadAsset<Sprite>(name);
+        dictSprite.Add(name, sprite);
+        return sprite;
+    }
+
     private AssetBundle LoadAssetBundle(string assetBundleName)
     {
         AssetBundle assetBundle;
